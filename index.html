@@ -24,7 +24,7 @@
     </div>
 
     <div class="landing-hero">
-      <p class="landing-tagline">Propostas comerciais <span class="tagline-rotate"><span class="tagline-sizer" aria-hidden="true">personalizadas</span><span class="tagline-word active">organizadas</span><span class="tagline-word">aprovadas</span><span class="tagline-word">mapeadas</span><span class="tagline-word">personalizadas</span><span class="tagline-word">rastreadas</span><span class="tagline-word">fechadas</span><span class="tagline-word">validadas</span><span class="tagline-word">convertidas</span></span>,<br>do rascunho ao aceite.</p>
+      <p class="landing-tagline">Propostas comerciais<br><span id="taglineWord" class="tagline-word-animated">organizadas,</span><br>do rascunho ao aceite.</p>
       <p class="landing-description">
         Uma plataforma para consultores e escritórios que precisam enviar, acompanhar e fechar propostas com consistência e profissionalismo.
       </p>
@@ -84,16 +84,26 @@
 
   // Rotating tagline words
   (function() {
-    var words = document.querySelectorAll('.tagline-word');
-    var current = 0;
+    var words = ['organizadas,','aprovadas,','mapeadas,','personalizadas,','rastreadas,','fechadas,','validadas,','convertidas,'];
+    var el = document.getElementById('taglineWord');
+    var idx = 0;
     setInterval(function() {
-      var prev = current;
-      current = (current + 1) % words.length;
-      words[prev].classList.remove('active');
-      words[prev].classList.add('exiting');
-      words[current].classList.add('active');
-      setTimeout(function() { words[prev].classList.remove('exiting'); }, 600);
-    }, 2200);
+      // Slide up + fade out
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-14px)';
+      setTimeout(function() {
+        // Snap to below (no transition)
+        el.style.transition = 'none';
+        el.style.transform = 'translateY(14px)';
+        idx = (idx + 1) % words.length;
+        el.textContent = words[idx];
+        void el.offsetWidth; // force reflow
+        // Restore transition and slide in
+        el.style.transition = '';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 370);
+    }, 2600);
   })();
 
   // Login panel toggle

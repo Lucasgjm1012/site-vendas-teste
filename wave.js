@@ -60,6 +60,11 @@ export function initWaveBg(container, {
   svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;overflow:hidden;';
   container.appendChild(svg);
 
+  /* Cursor dot */
+  const dot = document.createElement('div');
+  dot.style.cssText = 'position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(15,61,62,0.45);transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:2;transition:opacity 400ms ease;';
+  container.appendChild(dot);
+
   /* State */
   let mouse = { x: -600, y: 0, lx: 0, ly: 0, sx: -600, sy: 0, v: 0, vs: 0, a: 0, set: false };
   let lines = [], paths = [], bounding = null, raf = null;
@@ -115,6 +120,8 @@ export function initWaveBg(container, {
       mouse.set = true;
     }
   }
+  function onMouseEnter() { dot.style.opacity = '1'; }
+  function onMouseLeave() { dot.style.opacity = '0'; }
 
   /* ── Point physics ── */
   function movePoints(time) {
@@ -185,6 +192,9 @@ export function initWaveBg(container, {
     mouse.lx  = mouse.x; mouse.ly = mouse.y;
     mouse.a   = Math.atan2(dy, dx);
 
+    dot.style.left = mouse.sx + 'px';
+    dot.style.top  = mouse.sy + 'px';
+
     movePoints(t);
     drawLines();
     raf = requestAnimationFrame(tick);
@@ -194,6 +204,8 @@ export function initWaveBg(container, {
   const onResize = () => { setSize(); setLines(); };
   window.addEventListener('resize',     onResize);
   window.addEventListener('mousemove',  onMouseMove);
+  container.addEventListener('mouseenter', onMouseEnter);
+  container.addEventListener('mouseleave', onMouseLeave);
 
   setSize();
   setLines();
@@ -204,6 +216,9 @@ export function initWaveBg(container, {
     if (raf) cancelAnimationFrame(raf);
     window.removeEventListener('resize',    onResize);
     window.removeEventListener('mousemove', onMouseMove);
+    container.removeEventListener('mouseenter', onMouseEnter);
+    container.removeEventListener('mouseleave', onMouseLeave);
     svg.remove();
+    dot.remove();
   };
 }
