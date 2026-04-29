@@ -1,10 +1,9 @@
 /**
  * wave.js — Lume brand wave background
  * Vanilla JS, zero external dependencies.
- * Adapted from wave-background component; palette matched to Lume briefing.
  */
 
-/* ── Perlin noise (drop-in for simplex-noise createNoise2D) ──── */
+/* ── Perlin noise ──────────────────────────────────────────────── */
 function createNoise2D() {
   const p = new Uint8Array(256);
   for (let i = 0; i < 256; i++) p[i] = i;
@@ -36,15 +35,6 @@ function createNoise2D() {
 }
 
 /* ── Wave initializer ─────────────────────────────────────────── */
-/**
- * @param {HTMLElement} container  — the element to draw inside (needs position:relative)
- * @param {object}      options
- * @param {string}  options.strokeColor   — CSS color string
- * @param {number}  options.xGap          — horizontal line spacing in px
- * @param {number}  options.yGap          — vertical point spacing in px
- * @param {number}  options.amplitude     — overall wave amplitude multiplier (0–1)
- * @returns {function}  cleanup() — call to remove listeners and cancel animation
- */
 export function initWaveBg(container, {
   strokeColor = 'rgba(15, 61, 62, 0.11)',
   xGap = 20,
@@ -55,18 +45,18 @@ export function initWaveBg(container, {
 
   const noise2D = createNoise2D();
 
-  /* Build SVG */
+  /* SVG layer */
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;overflow:hidden;';
   container.appendChild(svg);
 
-  /* Cursor dot */
+  /* Cursor dot — lives in container, shown/hidden via opacity */
   const dot = document.createElement('div');
-  dot.style.cssText = 'position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(15,61,62,0.45);transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:2;transition:opacity 400ms ease;';
+  dot.style.cssText = 'position:absolute;width:7px;height:7px;border-radius:50%;background:rgba(15,61,62,0.5);transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:2;transition:opacity 300ms ease;';
   container.appendChild(dot);
 
   /* State */
-  let mouse = { x: -600, y: 0, lx: 0, ly: 0, sx: -600, sy: 0, v: 0, vs: 0, a: 0, set: false };
+  let mouse = { x: -9999, y: 0, lx: 0, ly: 0, sx: -9999, sy: 0, v: 0, vs: 0, a: 0, set: false };
   let lines = [], paths = [], bounding = null, raf = null;
 
   /* ── Size ── */
@@ -108,20 +98,29 @@ export function initWaveBg(container, {
     }
   }
 
-  /* ── Mouse ── */
+  /* ── Mouse — uses window listener so pointer-events:none on container is no problem ── */
   function onMouseMove(e) {
     if (!bounding) return;
     const rect = container.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-    if (!mouse.set) {
-      mouse.sx = mouse.x; mouse.sy = mouse.y;
-      mouse.lx = mouse.x; mouse.ly = mouse.y;
-      mouse.set = true;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    /* Show dot only when cursor is actually inside the wave panel */
+    const inside = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+    dot.style.opacity = inside ? '1' : '0';
+
+    if (inside) {
+      mouse.x = x;
+      mouse.y = y;
+      if (!mouse.set) {
+        mouse.sx = x; mouse.sy = y;
+        mouse.lx = x; mouse.ly = y;
+        mouse.set = true;
+      }
+    } else {
+      mouse.x = -9999;
     }
   }
-  function onMouseEnter() { dot.style.opacity = '1'; }
-  function onMouseLeave() { dot.style.opacity = '0'; }
 
   /* ── Point physics ── */
   function movePoints(time) {
@@ -136,26 +135,26 @@ export function initWaveBg(container, {
         p.wave.x = Math.cos(n) * 11 * A;
         p.wave.y = Math.sin(n) * 5  * A;
 
-        /* Cursor repulsion */
+        /* Cursor repulsion — stronger force, larger radius */
         const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
         const d  = Math.hypot(dx, dy);
-        const l  = Math.max(140, mouse.vs);
+        const l  = Math.max(160, mouse.vs);
         if (d < l) {
           const s = 1 - d / l;
           const f = Math.cos(d * 0.001) * s;
-          p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00028 * A;
-          p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00028 * A;
+          p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00055 * A;
+          p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00055 * A;
         }
 
-        /* Spring restore */
-        p.cursor.vx += (0 - p.cursor.x) * 0.012;
-        p.cursor.vy += (0 - p.cursor.y) * 0.012;
-        p.cursor.vx *= 0.93;
-        p.cursor.vy *= 0.93;
+        /* Spring restore — softer spring = displacement lingers longer */
+        p.cursor.vx += (0 - p.cursor.x) * 0.009;
+        p.cursor.vy += (0 - p.cursor.y) * 0.009;
+        p.cursor.vx *= 0.91;
+        p.cursor.vy *= 0.91;
         p.cursor.x  += p.cursor.vx;
         p.cursor.y  += p.cursor.vy;
-        p.cursor.x   = Math.min(45, Math.max(-45, p.cursor.x));
-        p.cursor.y   = Math.min(45, Math.max(-45, p.cursor.y));
+        p.cursor.x   = Math.min(75, Math.max(-75, p.cursor.x));
+        p.cursor.y   = Math.min(75, Math.max(-75, p.cursor.y));
       });
     });
   }
@@ -185,13 +184,14 @@ export function initWaveBg(container, {
     mouse.sy += (mouse.y - mouse.sy) * 0.1;
 
     const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
-    const d  = Math.hypot(dx, dy);
-    mouse.v   = d;
-    mouse.vs += (d - mouse.vs) * 0.1;
-    mouse.vs  = Math.min(100, mouse.vs);
+    const dist = Math.hypot(dx, dy);
+    mouse.v   = dist;
+    mouse.vs += (dist - mouse.vs) * 0.12;
+    mouse.vs  = Math.min(200, mouse.vs);
     mouse.lx  = mouse.x; mouse.ly = mouse.y;
     mouse.a   = Math.atan2(dy, dx);
 
+    /* Update dot position to smoothed mouse */
     dot.style.left = mouse.sx + 'px';
     dot.style.top  = mouse.sy + 'px';
 
@@ -202,10 +202,8 @@ export function initWaveBg(container, {
 
   /* ── Boot ── */
   const onResize = () => { setSize(); setLines(); };
-  window.addEventListener('resize',     onResize);
-  window.addEventListener('mousemove',  onMouseMove);
-  container.addEventListener('mouseenter', onMouseEnter);
-  container.addEventListener('mouseleave', onMouseLeave);
+  window.addEventListener('resize',    onResize);
+  window.addEventListener('mousemove', onMouseMove);
 
   setSize();
   setLines();
@@ -216,8 +214,6 @@ export function initWaveBg(container, {
     if (raf) cancelAnimationFrame(raf);
     window.removeEventListener('resize',    onResize);
     window.removeEventListener('mousemove', onMouseMove);
-    container.removeEventListener('mouseenter', onMouseEnter);
-    container.removeEventListener('mouseleave', onMouseLeave);
     svg.remove();
     dot.remove();
   };
