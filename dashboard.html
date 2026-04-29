@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lume — Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" onclick="navTo('dashboard')" style="cursor:pointer;">
+      <img src="../Símbolo Preto.png" alt="Lume">
+      <span class="brand">Lume</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-section="dashboard" onclick="navigate(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-section="propostas" onclick="navigate(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+        Propostas
+      </button>
+      <button class="nav-item" data-section="calendario" onclick="navigate(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        Calendário
+      </button>
+      <button class="nav-item" data-section="orcamentos" onclick="navigate(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Orçamentos
+      </button>
+    </nav>
+
+    <!-- Profile popup menu -->
+    <div class="profile-menu" id="profileMenu">
+      <div class="profile-menu-header">
+        <div class="user-avatar" style="width:36px;height:36px;font-size:13px;">LM</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--color-text);">Lucas M.</div>
+          <div class="profile-menu-email">lucas@email.com</div>
+        </div>
+      </div>
+      <button class="profile-menu-item" onclick="confirmLogout()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        Sair da conta
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-info" onclick="toggleProfileMenu()" style="cursor:pointer;" title="Perfil">
+        <div class="user-avatar">LM</div>
+        <span class="user-name">Lucas M.</span>
+      </div>
+      <button class="btn-icon" title="Configurações">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Topbar ── -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span>Lume</span>
+      <span class="crumb-sep">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </span>
+      <span class="crumb-current" id="breadcrumbCurrent">Dashboard</span>
+    </div>
+    <div class="topbar-search">
+      <input class="input input-search" type="search" id="globalSearch" placeholder="Buscar proposta ou cliente..." oninput="filterProposals(this.value)">
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="openModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Nova proposta
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Main ── -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ════════════ SECTION: DASHBOARD ════════════ -->
+      <section id="sec-dashboard" class="section active">
+
+        <div class="dashboard-header">
+          <div>
+            <h1 class="greeting" id="greetingText">Boa tarde, Lucas.</h1>
+            <p class="greeting-sub" id="greetingDate"></p>
+          </div>
+          <div class="period-tabs">
+            <button class="period-tab active" onclick="setPeriod(this,'mes')">Este mês</button>
+            <button class="period-tab" onclick="setPeriod(this,'ano')">Este ano</button>
+            <button class="period-tab" onclick="setPeriod(this,'custom')">Período</button>
+          </div>
+        </div>
+
+        <!-- Pipeline stage counts -->
+        <div class="kpi-grid-5 mb-24">
+          <div class="kpi-card">
+            <div class="kpi-label"><span class="status st-redigir" style="display:inline-flex;gap:6px;align-items:center;font-size:11px;"></span>A Redigir</div>
+            <div class="kpi-value" id="kpi-redigir">2</div>
+            <div class="kpi-delta c-secondary">propostas</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-warning);display:inline-block;"></span>Aguarda Design</div>
+            <div class="kpi-value" id="kpi-design">2</div>
+            <div class="kpi-delta c-secondary">propostas</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-accent);display:inline-block;"></span>Com Design</div>
+            <div class="kpi-value" id="kpi-com-design">1</div>
+            <div class="kpi-delta c-secondary">proposta</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-warning);display:inline-block;"></span>Aguarda Validação</div>
+            <div class="kpi-value" id="kpi-validacao">2</div>
+            <div class="kpi-delta c-secondary">propostas</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-success);display:inline-block;"></span>Validadas</div>
+            <div class="kpi-value" id="kpi-validada">2</div>
+            <div class="kpi-delta delta-up">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              neste mês
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue KPIs -->
+        <div class="kpi-grid mb-24">
+          <div class="kpi-card">
+            <div class="kpi-label">Receita prevista</div>
+            <div class="kpi-value mono" id="kpi-receita-prev">R$&nbsp;216.000,00</div>
+            <div class="kpi-delta c-secondary">em propostas ativas</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Validado neste mês</div>
+            <div class="kpi-value mono" id="kpi-receita-mes">R$&nbsp;110.000,00</div>
+            <div class="kpi-delta delta-up">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              +100% vs. mês anterior
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Ticket médio</div>
+            <div class="kpi-value mono" id="kpi-ticket">R$&nbsp;36.111,11</div>
+            <div class="kpi-delta c-secondary">por proposta</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Total de propostas</div>
+            <div class="kpi-value" id="kpi-total">9</div>
+            <div class="kpi-delta c-secondary">em andamento</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <!-- Revenue line chart -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Receita validada por mês</span>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--color-primary);"></div>
+                  2025–2026
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dash"></div>
+                  Período anterior
+                </div>
+              </div>
+            </div>
+            <div style="height:220px; position:relative;">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Stage distribution + avg time -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Propostas por fase</span>
+            </div>
+            <div class="stage-bars" id="stageBars"></div>
+
+            <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--color-border);">
+              <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Tempo médio por fase</p>
+              <table class="avg-table">
+                <tbody>
+                  <tr><td class="c-secondary t-small">A Redigir</td><td class="days">4 dias</td></tr>
+                  <tr><td class="c-secondary t-small">Aguarda Design</td><td class="days">7 dias</td></tr>
+                  <tr><td class="c-secondary t-small">Com Design</td><td class="days">3 dias</td></tr>
+                  <tr><td class="c-secondary t-small">Aguarda Validação</td><td class="days">12 dias</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent proposals table -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <span class="table-card-title">Propostas recentes</span>
+            <button class="btn-ghost t-small" onclick="navigate(document.querySelector('[data-section=propostas]'))">Ver todas</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Cliente</th>
+                <th>Proposta</th>
+                <th class="r">Valor</th>
+                <th>Prazo</th>
+              </tr>
+            </thead>
+            <tbody id="recentProposals"></tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- ════════════ SECTION: PROPOSTAS ════════════ -->
+      <section id="sec-propostas" class="section">
+
+        <div class="kanban-toolbar">
+          <div class="filter-chips" id="filterChips">
+            <button class="chip active" onclick="filterByStage(this,'all')">Todas</button>
+            <button class="chip" onclick="filterByStage(this,'redigir')">A Redigir</button>
+            <button class="chip" onclick="filterByStage(this,'aguarda_design')">Aguarda Design</button>
+            <button class="chip" onclick="filterByStage(this,'com_design')">Com Design</button>
+            <button class="chip" onclick="filterByStage(this,'aguarda_validacao')">Aguarda Validação</button>
+            <button class="chip" onclick="filterByStage(this,'validada')">Validadas</button>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Nova proposta
+          </button>
+        </div>
+
+        <div class="kanban-board" id="kanbanBoard"></div>
+
+      </section>
+
+      <!-- ════════════ SECTION: CALENDÁRIO ════════════ -->
+      <section id="sec-calendario" class="section">
+
+        <div class="flex-between mb-24">
+          <h2 style="font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--color-text);">Calendário de prazos</h2>
+        </div>
+
+        <div class="calendar-layout">
+          <div class="calendar-card">
+            <div class="calendar-nav">
+              <button class="btn-icon" onclick="calNav(-1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <span class="cal-month" id="calMonthLabel"></span>
+              <button class="btn-icon" onclick="calNav(1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+
+          <!-- Bottom row: prazos + legenda -->
+          <div class="cal-bottom-row">
+            <div class="cal-upcoming">
+              <p class="cal-upcoming-title">Prazos próximos</p>
+              <div id="upcomingList"></div>
+            </div>
+            <div class="cal-legend">
+              <p class="cal-legend-title">Legenda</p>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-neutral-status);"></div>A Redigir</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Design</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-accent);"></div>Com Design</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Validação</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-success);"></div>Validada</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ════════════ SECTION: ORÇAMENTOS ════════════ -->
+      <section id="sec-orcamentos" class="section">
+
+        <div class="flex-between mb-24">
+          <h2 style="font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--color-text);">Orçamentos</h2>
+          <div class="period-tabs">
+            <button class="period-tab active" onclick="setPeriod(this,'mes')">Este mês</button>
+            <button class="period-tab" onclick="setPeriod(this,'ano')">Este ano</button>
+          </div>
+        </div>
+
+        <div class="orc-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Total orçado (ativo)</div>
+            <div class="kpi-value mono">R$&nbsp;216.000,00</div>
+            <div class="kpi-delta c-secondary">7 propostas em aberto</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Validado neste mês</div>
+            <div class="kpi-value mono">R$&nbsp;110.000,00</div>
+            <div class="kpi-delta delta-up">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              2 propostas
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Validado no ano</div>
+            <div class="kpi-value mono">R$&nbsp;110.000,00</div>
+            <div class="kpi-delta c-secondary">jan – abr 2026</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-header">
+            <span class="table-card-title">Todas as propostas</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Cliente</th>
+                <th>Proposta</th>
+                <th class="r">Valor atual</th>
+                <th class="r">Valor anterior</th>
+                <th>Prazo</th>
+                <th>Criada em</th>
+              </tr>
+            </thead>
+            <tbody id="orcamentosTable"></tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div><!-- /main-inner -->
+  </main>
+
+</div><!-- /app -->
+
+<!-- ── Modal: Nova Proposta ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nova proposta</span>
+      <button class="btn-icon" onclick="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row-2">
+        <div class="form-field">
+          <label class="form-label">Cliente</label>
+          <input class="input" id="newClient" placeholder="Nome do cliente">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Fase inicial</label>
+          <select class="input" id="newStage">
+            <option value="redigir">A Redigir</option>
+            <option value="aguarda_design">Aguarda Design</option>
+            <option value="com_design">Com Design</option>
+            <option value="aguarda_validacao">Aguarda Validação</option>
+            <option value="validada">Validada</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Título da proposta</label>
+        <input class="input" id="newTitle" placeholder="Descreva brevemente o escopo">
+      </div>
+      <div class="form-row-2">
+        <div class="form-field">
+          <label class="form-label">Valor (R$)</label>
+          <input class="input" id="newValue" type="number" placeholder="0,00" step="0.01">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Prazo</label>
+          <input class="input" id="newDeadline" type="date">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="addProposal()">Adicionar proposta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal: Detalhe do calendário ── -->
+<div class="modal-overlay" id="calDetailOverlay" onclick="closeCalDetailOnOverlay(event)">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <span class="modal-title" id="calDetailTitle"></span>
+      <button class="btn-icon" onclick="closeCalDetail()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div id="calDetailBody"></div>
+  </div>
+</div>
+
+<!-- ── Modal: Confirmar logout ── -->
+<div class="modal-overlay" id="logoutOverlay" onclick="closeLogoutOnOverlay(event)">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <span class="modal-title">Sair da conta</span>
+      <button class="btn-icon" onclick="closeLogout()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <p style="font-size:14px;color:var(--color-text-secondary);line-height:22px;">Tem certeza que deseja encerrar a sessão?</p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeLogout()">Cancelar</button>
+      <button class="btn btn-primary" onclick="doLogout()">Sair da conta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── Mock data ─────────────────────────────────────────────── */
+let proposals = [
+  { id:1, client:'Ventura & Associados',  title:'Consultoria Estratégica Q2 2026',      stage:'redigir',          value:18500,             deadline:new Date(2026,4,10), created:new Date(2026,3,15) },
+  { id:2, client:'Meridian Capital',      title:'Due Diligence — Aquisição Gama',        stage:'redigir',          value:35000,             deadline:new Date(2026,4,3),  created:new Date(2026,3,20) },
+  { id:3, client:'Holloway Partners',     title:'Estruturação LGPD — Ciclo 2',           stage:'aguarda_design',   value:12000, prev:10000, deadline:new Date(2026,3,30), created:new Date(2026,3,10), textFile:null },
+  { id:4, client:'Falcão Gestão',         title:'Plano de Expansão Regional',            stage:'aguarda_design',   value:22500,             deadline:new Date(2026,4,15), created:new Date(2026,3,8),  textFile:null },
+  { id:5, client:'Nexus Consultoria',     title:'Redesign Operacional — Fase 2',         stage:'com_design',       value:45000, prev:40000, deadline:new Date(2026,4,1),  created:new Date(2026,2,28), pptFile:null },
+  { id:6, client:'Alvo Investimentos',    title:'Assessoria Tributária 2026',            stage:'aguarda_validacao', value:28000,            deadline:new Date(2026,3,28), created:new Date(2026,3,5)  },
+  { id:7, client:'Belfort & Lima',        title:'Reestruturação Societária',             stage:'aguarda_validacao', value:55000, prev:50000,deadline:new Date(2026,4,5),  created:new Date(2026,2,25) },
+  { id:8, client:'Cortex Ventures',       title:'Auditoria de Compliance',               stage:'validada',         value:32000,             deadline:new Date(2026,3,20), created:new Date(2026,2,15), validated:new Date(2026,3,18) },
+  { id:9, client:'Orion Advisory',        title:'Fusão e Incorporação — Delta',          stage:'validada',         value:78000,             deadline:new Date(2026,3,25), created:new Date(2026,2,10), validated:new Date(2026,3,22) },
+];
+
+let nextId = 10;
+let calYear  = 2026;
+let calMonth = 3; // 0-indexed, April = 3
+
+const stageConfig = {
+  redigir:          { label:'A Redigir',         cls:'st-redigir',        evCls:'ev-redigir',    fillColor:'var(--color-neutral-status)' },
+  aguarda_design:   { label:'Aguarda Design',     cls:'st-aguarda-design', evCls:'ev-design',     fillColor:'var(--color-warning)' },
+  com_design:       { label:'Com Design',         cls:'st-com-design',     evCls:'ev-com-design', fillColor:'var(--color-accent)' },
+  aguarda_validacao:{ label:'Aguarda Validação',  cls:'st-validacao',      evCls:'ev-validacao',  fillColor:'var(--color-warning)' },
+  validada:         { label:'Validada',           cls:'st-validada',       evCls:'ev-validada',   fillColor:'var(--color-success)' },
+};
+
+/* ─── Formatting ─────────────────────────────────────────────── */
+function brl(v) {
+  return new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' }).format(v);
+}
+function fmtDate(d) {
+  if (!(d instanceof Date)) d = new Date(d);
+  return d.toLocaleDateString('pt-BR');
+}
+function daysUntil(d) {
+  const diff = Math.ceil((d - new Date()) / 86400000);
+  if (diff < 0) return `${Math.abs(diff)} dia${Math.abs(diff)>1?'s':''} atrás`;
+  if (diff === 0) return 'Hoje';
+  if (diff === 1) return 'Amanhã';
+  return `em ${diff} dias`;
+}
+
+/* ─── Greeting ─────────────────────────────────────────────── */
+(function initGreeting() {
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  document.getElementById('greetingText').textContent = `${greet}, Lucas.`;
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const d = new Date();
+  document.getElementById('greetingDate').textContent =
+    `${['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'][d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}.`;
+})();
+
+/* ─── Navigation ─────────────────────────────────────────────── */
+function navTo(sec) {
+  const btn = document.querySelector(`[data-section="${sec}"]`);
+  if (btn) navigate(btn);
+}
+function navigate(btn) {
+  if (!btn) return;
+  const sec = btn.dataset.section;
+  document.getElementById('profileMenu').classList.remove('open');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + sec).classList.add('active');
+  const labels = { dashboard:'Dashboard', propostas:'Propostas', calendario:'Calendário', orcamentos:'Orçamentos' };
+  document.getElementById('breadcrumbCurrent').textContent = labels[sec] || sec;
+  if (sec === 'calendario') renderCalendar();
+  if (sec === 'propostas')  renderKanban(proposals);
+  if (sec === 'orcamentos') renderOrcamentos();
+}
+
+/* ─── Period tabs ─────────────────────────────────────────────── */
+function setPeriod(btn, period) {
+  btn.closest('.period-tabs').querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─── Stage bars ─────────────────────────────────────────────── */
+function renderStageBars() {
+  const counts = {};
+  Object.keys(stageConfig).forEach(k => counts[k] = 0);
+  proposals.forEach(p => counts[p.stage]++);
+  const total = proposals.length || 1;
+  const html = Object.entries(stageConfig).map(([k,cfg]) => `
+    <div class="stage-bar-item">
+      <div class="stage-bar-header">
+        <span class="stage-bar-name">
+          <span style="width:7px;height:7px;border-radius:50%;background:${cfg.fillColor};display:inline-block;"></span>
+          ${cfg.label}
+        </span>
+        <span class="stage-bar-count">${counts[k]}</span>
+      </div>
+      <div class="stage-track">
+        <div class="stage-fill" style="width:${Math.round(counts[k]/total*100)}%;background:${cfg.fillColor};"></div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('stageBars').innerHTML = html;
+}
+
+/* ─── Revenue Chart ─────────────────────────────────────────── */
+function renderRevenueChart() {
+  const ctx = document.getElementById('revenueChart');
+  if (!ctx) return;
+  if (window._revenueChart) window._revenueChart.destroy();
+  window._revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Nov', 'Dez', 'Jan', 'Fev', 'Mar', 'Abr'],
+      datasets: [
+        {
+          label: '2025–2026',
+          data: [45000, 62000, 38000, 71000, 55000, 110000],
+          borderColor: '#0F3D3E',
+          borderWidth: 1.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#0F3D3E',
+          pointBorderColor: '#0F3D3E',
+          fill: false,
+          tension: 0.35,
+        },
+        {
+          label: 'Período anterior',
+          data: [38000, 41000, 44000, 53000, 67000, 55000],
+          borderColor: '#4A7C74',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.35,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: ctx => ctx[0]?.label ? `${ctx[0].label} 2025–2026` : '',
+            label: ctx => {
+              const prefix = ctx.datasetIndex === 0 ? 'Receita validada: ' : 'Período anterior: ';
+              return prefix + brl(ctx.raw);
+            }
+          },
+          backgroundColor: '#1C1C1A',
+          titleColor: '#FAFAF7',
+          bodyColor: '#FAFAF7',
+          padding: 12,
+          cornerRadius: 4,
+          titleFont: { family: "'Inter Tight', sans-serif", size: 12, weight: '500' },
+          bodyFont: { family: "'JetBrains Mono', monospace", size: 12 },
+          displayColors: false,
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E4E4DF', borderDash: [2,2] },
+          ticks: { color: '#6B6B66', font: { size: 11, family: "'Inter', sans-serif" } },
+          border: { display: false }
+        },
+        y: {
+          grid: { color: '#E4E4DF', borderDash: [2,2] },
+          ticks: {
+            color: '#6B6B66',
+            font: { size: 11, family: "'JetBrains Mono', monospace" },
+            callback: v => `R$ ${(v/1000).toFixed(0)}k`
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ─── Recent proposals table ─────────────────────────────────── */
+function renderRecentProposals() {
+  const recent = [...proposals].sort((a,b) => b.created - a.created).slice(0,5);
+  const tbody = document.getElementById('recentProposals');
+  tbody.innerHTML = recent.map(p => {
+    const cfg = stageConfig[p.stage];
+    return `<tr>
+      <td><span class="status ${cfg.cls}">${cfg.label}</span></td>
+      <td style="color:var(--color-text-secondary);font-size:13px;">${p.client}</td>
+      <td>${p.title}</td>
+      <td class="r">${brl(p.value)}</td>
+      <td style="font-size:13px;color:var(--color-text-secondary);">${fmtDate(p.deadline)}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ─── Kanban ─────────────────────────────────────────────────── */
+function renderKanban(data) {
+  const board = document.getElementById('kanbanBoard');
+  board.innerHTML = Object.entries(stageConfig).map(([stageKey, cfg]) => {
+    const cards = data.filter(p => p.stage === stageKey);
+    const cardsHtml = cards.length === 0
+      ? `<p style="font-size:12px;color:var(--color-text-secondary);padding:8px 4px;text-align:center;opacity:0.6;">Nenhuma proposta.</p>`
+      : cards.map(p => propCardHtml(p)).join('');
+    return `
+      <div class="kanban-col" data-stage="${stageKey}">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">
+            <span style="width:7px;height:7px;border-radius:50%;background:${cfg.fillColor};display:inline-block;"></span>
+            ${cfg.label}
+          </span>
+          <span class="kanban-col-count">${cards.length}</span>
+        </div>
+        <div class="kanban-col-cards">${cardsHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function propCardHtml(p) {
+  const prevHtml = p.prev ? `
+    <div class="prop-card-row">
+      <span class="c-secondary" style="font-size:10px;text-transform:uppercase;letter-spacing:0.03em;">Valor anterior</span>
+      <span class="prop-value-prev">${brl(p.prev)}</span>
+    </div>` : '';
+
+  const deltaHtml = p.prev ? (() => {
+    const pct = Math.round((p.value - p.prev) / p.prev * 100);
+    const up = pct >= 0;
+    return `<div class="prop-card-row">
+      <span></span>
+      <span class="prop-delta ${up ? 'delta-up' : 'delta-down'}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${up ? '<path d="M7 17 17 7"/><path d="M7 7h10v10"/>' : '<path d="M7 7 17 17"/><path d="M17 7v10H7"/>'}</svg>
+        ${up?'+':''}${pct}%
+      </span>
+    </div>`;
+  })() : '';
+
+  const uploadHtml = (() => {
+    if (p.stage === 'aguarda_design') {
+      const hasFile = p.textFile;
+      return `<div class="upload-area ${hasFile?'has-file':''}" onclick="triggerUpload(event,${p.id},'text')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        <label for="upload-${p.id}-text">${hasFile ? p.textFile : 'Anexar texto (DOCX/PDF)'}</label>
+        <input type="file" id="upload-${p.id}-text" accept=".doc,.docx,.pdf" onchange="handleUpload(event,${p.id},'text')">
+      </div>`;
+    }
+    if (p.stage === 'com_design') {
+      const hasFile = p.pptFile;
+      return `<div class="upload-area ${hasFile?'has-file':''}" onclick="triggerUpload(event,${p.id},'ppt')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        <label for="upload-${p.id}-ppt">${hasFile ? p.pptFile : 'Anexar apresentação (PPT)'}</label>
+        <input type="file" id="upload-${p.id}-ppt" accept=".ppt,.pptx" onchange="handleUpload(event,${p.id},'ppt')">
+      </div>`;
+    }
+    return '';
+  })();
+
+  return `<div class="prop-card" id="card-${p.id}">
+    <div class="prop-card-client">${p.client}</div>
+    <div class="prop-card-title">${p.title}</div>
+    <div class="prop-card-footer">
+      <div class="prop-card-row">
+        <span class="prop-card-value">${brl(p.value)}</span>
+        <span class="prop-card-date">${fmtDate(p.deadline)}</span>
+      </div>
+      ${prevHtml}
+      ${deltaHtml}
+    </div>
+    ${uploadHtml}
+  </div>`;
+}
+
+function triggerUpload(e, id, type) {
+  e.stopPropagation();
+  document.getElementById(`upload-${id}-${type}`).click();
+}
+
+function handleUpload(e, id, type) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const p = proposals.find(x => x.id === id);
+  if (!p) return;
+  if (type === 'text') p.textFile = file.name;
+  if (type === 'ppt')  p.pptFile  = file.name;
+  renderKanban(proposals);
+}
+
+/* ─── Filter chips ─────────────────────────────────────────────── */
+function filterByStage(btn, stage) {
+  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = stage === 'all' ? proposals : proposals.filter(p => p.stage === stage);
+  renderKanban(filtered);
+}
+
+/* ─── Global search ─────────────────────────────────────────────── */
+function filterProposals(q) {
+  if (!q.trim()) {
+    renderKanban(proposals);
+    return;
+  }
+  const lq = q.toLowerCase();
+  const filtered = proposals.filter(p =>
+    p.client.toLowerCase().includes(lq) || p.title.toLowerCase().includes(lq)
+  );
+  renderKanban(filtered);
+  if (document.querySelector('[data-section=propostas]') && !document.getElementById('sec-propostas').classList.contains('active')) {
+    navigate(document.querySelector('[data-section="propostas"]'));
+  }
+}
+
+/* ─── Orçamentos table ─────────────────────────────────────────── */
+function renderOrcamentos() {
+  const sorted = [...proposals].sort((a,b) => b.value - a.value);
+  const tbody = document.getElementById('orcamentosTable');
+  tbody.innerHTML = sorted.map(p => {
+    const cfg = stageConfig[p.stage];
+    return `<tr>
+      <td><span class="status ${cfg.cls}">${cfg.label}</span></td>
+      <td style="font-size:13px;color:var(--color-text-secondary);">${p.client}</td>
+      <td>${p.title}</td>
+      <td class="r">${brl(p.value)}</td>
+      <td class="r" style="color:var(--color-text-secondary);">${p.prev ? brl(p.prev) : '—'}</td>
+      <td style="font-size:13px;">${fmtDate(p.deadline)}</td>
+      <td style="font-size:13px;color:var(--color-text-secondary);">${fmtDate(p.created)}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ─── Calendar ─────────────────────────────────────────────────── */
+const PT_MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const PT_WEEKDAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent = `${PT_MONTHS[calMonth]} ${calYear}`;
+  const grid = document.getElementById('calGrid');
+
+  const weekdaysHtml = PT_WEEKDAYS.map(d => `<div class="cal-weekday">${d}</div>`).join('');
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  const today = new Date();
+
+  // Map proposals to deadline day
+  const eventsByDay = {};
+  proposals.forEach(p => {
+    const d = p.deadline;
+    if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+      const day = d.getDate();
+      if (!eventsByDay[day]) eventsByDay[day] = [];
+      eventsByDay[day].push(p);
+    }
+  });
+
+  let daysHtml = '';
+
+  // Prev month padding
+  for (let i = firstDay - 1; i >= 0; i--) {
+    daysHtml += `<div class="cal-day other"><div class="cal-day-num">${daysInPrev - i}</div></div>`;
+  }
+
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+    const events  = eventsByDay[d] || [];
+    const evHtml  = events.map(p => {
+      const cfg = stageConfig[p.stage];
+      const name = p.client.split(' ')[0];
+      return `<div class="cal-event ${cfg.evCls}" onclick="showCalDetail(${p.id})" title="${p.client} — ${p.title}" style="cursor:pointer;">${name}</div>`;
+    }).join('');
+    daysHtml += `<div class="cal-day${isToday?' today':''}"><div class="cal-day-num">${d}</div>${evHtml}</div>`;
+  }
+
+  // Next month padding
+  const totalCells = firstDay + daysInMonth;
+  const remaining  = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+  for (let d = 1; d <= remaining; d++) {
+    daysHtml += `<div class="cal-day other"><div class="cal-day-num">${d}</div></div>`;
+  }
+
+  grid.innerHTML = weekdaysHtml + daysHtml;
+  renderUpcoming();
+}
+
+function renderUpcoming() {
+  const now   = new Date();
+  const cutoff = new Date(now.getTime() + 14 * 86400000);
+  const upcoming = proposals
+    .filter(p => p.deadline >= now && p.deadline <= cutoff)
+    .sort((a,b) => a.deadline - b.deadline)
+    .slice(0, 6);
+
+  const list = document.getElementById('upcomingList');
+  if (!upcoming.length) {
+    list.innerHTML = `<p class="c-secondary" style="font-size:13px;">Nenhum prazo nos próximos 14 dias.</p>`;
+    return;
+  }
+  list.innerHTML = upcoming.map(p => `
+    <div class="cal-upcoming-item">
+      <div class="cal-upcoming-name">${p.title}</div>
+      <div class="cal-upcoming-client">${p.client}</div>
+      <div class="cal-upcoming-date">${fmtDate(p.deadline)} · ${daysUntil(p.deadline)}</div>
+    </div>`).join('');
+}
+
+/* ─── Modal ─────────────────────────────────────────────────────── */
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('newDeadline').valueAsDate = new Date(Date.now() + 14*86400000);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function addProposal() {
+  const client   = document.getElementById('newClient').value.trim();
+  const title    = document.getElementById('newTitle').value.trim();
+  const value    = parseFloat(document.getElementById('newValue').value) || 0;
+  const deadline = new Date(document.getElementById('newDeadline').value + 'T12:00:00');
+  const stage    = document.getElementById('newStage').value;
+  if (!client || !title) return;
+  proposals.push({ id:nextId++, client, title, stage, value, deadline, created:new Date() });
+  closeModal();
+  renderDashboard();
+  renderKanban(proposals);
+  renderOrcamentos();
+  document.getElementById('newClient').value = '';
+  document.getElementById('newTitle').value  = '';
+  document.getElementById('newValue').value  = '';
+}
+
+/* ─── Init dashboard ─────────────────────────────────────────── */
+function renderDashboard() {
+  const counts = {};
+  Object.keys(stageConfig).forEach(k => counts[k] = 0);
+  proposals.forEach(p => counts[p.stage]++);
+  document.getElementById('kpi-redigir').textContent    = counts.redigir;
+  document.getElementById('kpi-design').textContent     = counts.aguarda_design;
+  document.getElementById('kpi-com-design').textContent = counts.com_design;
+  document.getElementById('kpi-validacao').textContent  = counts.aguarda_validacao;
+  document.getElementById('kpi-validada').textContent   = counts.validada;
+  document.getElementById('kpi-total').textContent      = proposals.length;
+  const active = proposals.filter(p => p.stage !== 'validada');
+  const validated = proposals.filter(p => p.stage === 'validada');
+  const prevTotal = active.reduce((s,p) => s + p.value, 0);
+  const valTotal  = validated.reduce((s,p) => s + p.value, 0);
+  const ticket    = proposals.length ? proposals.reduce((s,p) => s+p.value,0) / proposals.length : 0;
+  document.getElementById('kpi-receita-prev').textContent = brl(prevTotal);
+  document.getElementById('kpi-receita-mes').textContent  = brl(valTotal);
+  document.getElementById('kpi-ticket').textContent       = brl(ticket);
+  renderStageBars();
+  renderRecentProposals();
+}
+
+/* ─── Calendar detail modal ─────────────────────────────────── */
+function showCalDetail(id) {
+  const p = proposals.find(x => x.id === id);
+  if (!p) return;
+  const cfg = stageConfig[p.stage];
+  document.getElementById('calDetailTitle').textContent = p.title;
+  const prevHtml = p.prev
+    ? `<div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.03em;">Anterior</span>
+        <span style="font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);text-decoration:line-through;">${brl(p.prev)}</span>
+        <span style="font-size:11px;color:${(p.value - p.prev) >= 0 ? 'var(--color-success)' : 'var(--color-danger)'};">${(p.value - p.prev) >= 0 ? '+' : ''}${Math.round((p.value - p.prev)/p.prev*100)}%</span>
+       </div>`
+    : '';
+  const validatedHtml = p.validated
+    ? `<div><p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Validada em</p><p style="font-size:14px;">${fmtDate(p.validated)}</p></div>`
+    : '';
+  document.getElementById('calDetailBody').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:20px;padding-top:4px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Cliente</p>
+          <p style="font-size:14px;">${p.client}</p>
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Fase</p>
+          <span class="status ${cfg.cls}">${cfg.label}</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Valor</p>
+          <p style="font-family:var(--font-mono);font-size:16px;font-weight:400;">${brl(p.value)}</p>
+          ${prevHtml}
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Prazo</p>
+          <p style="font-size:14px;">${fmtDate(p.deadline)}</p>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin-top:2px;">${daysUntil(p.deadline)}</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Criada em</p>
+          <p style="font-size:14px;">${fmtDate(p.created)}</p>
+        </div>
+        ${validatedHtml}
+      </div>
+    </div>`;
+  document.getElementById('calDetailOverlay').classList.add('open');
+}
+function closeCalDetail() {
+  document.getElementById('calDetailOverlay').classList.remove('open');
+}
+function closeCalDetailOnOverlay(e) {
+  if (e.target === document.getElementById('calDetailOverlay')) closeCalDetail();
+}
+
+/* ─── Profile menu ─────────────────────────────────────────── */
+function toggleProfileMenu() {
+  document.getElementById('profileMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const menu   = document.getElementById('profileMenu');
+  const footer = document.querySelector('.sidebar-footer');
+  const trigger = document.querySelector('.sidebar-footer .user-info');
+  if (!footer.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+/* ─── Logout ───────────────────────────────────────────────── */
+function confirmLogout() {
+  document.getElementById('profileMenu').classList.remove('open');
+  document.getElementById('logoutOverlay').classList.add('open');
+}
+function closeLogout() {
+  document.getElementById('logoutOverlay').classList.remove('open');
+}
+function closeLogoutOnOverlay(e) {
+  if (e.target === document.getElementById('logoutOverlay')) closeLogout();
+}
+function doLogout() {
+  window.location.href = 'index.html';
+}
+
+/* ─── Keyboard ─────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeCalDetail();
+    closeLogout();
+    document.getElementById('profileMenu').classList.remove('open');
+  }
+});
+
+/* ─── Boot ─────────────────────────────────────────────── */
+renderDashboard();
+renderRevenueChart();
+renderKanban(proposals);
+</script>
+</body>
+</html>

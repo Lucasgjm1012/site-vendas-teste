@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lume — Gestão de Propostas Comerciais</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="landing">
+  <!-- Left: hero -->
+  <div class="landing-left">
+    <!-- Wave background (z-index:0, behind content) -->
+    <div class="wave-bg" id="waveBg"></div>
+
+    <div class="landing-brand">
+      <img src="../Símbolo Preto.png" alt="Lume" style="height:22px;">
+      <span class="landing-brand-name">Lume</span>
+    </div>
+
+    <div class="landing-hero">
+      <p class="landing-tagline">Propostas comerciais <em>precisas</em>,<br>do rascunho ao aceite.</p>
+      <p class="landing-description">
+        Uma plataforma para consultores e escritórios que precisam enviar, acompanhar e fechar propostas com consistência e profissionalismo.
+      </p>
+      <div class="landing-features">
+        <div class="landing-feature">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 11 4 16"/></svg>
+          Acompanhe cada proposta do rascunho à validação final.
+        </div>
+        <div class="landing-feature">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 11 4 16"/></svg>
+          Visibilidade consolidada do seu pipeline de receita.
+        </div>
+        <div class="landing-feature">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 11 4 16"/></svg>
+          Identifique rapidamente o que exige atenção agora.
+        </div>
+        <div class="landing-feature">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 11 4 16"/></svg>
+          Calendário visual com todos os prazos em um só lugar.
+        </div>
+      </div>
+    </div>
+
+    <p class="landing-footer">Lume &copy; 2026</p>
+  </div>
+
+  <!-- Right: login form -->
+  <div class="landing-right">
+    <h1 class="landing-right-title">Entrar na plataforma</h1>
+    <p class="landing-right-sub">Acesse sua conta para continuar.</p>
+
+    <form class="auth-form" id="loginForm">
+      <div class="form-field">
+        <label class="form-label" for="email">E-mail</label>
+        <input class="input" type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password">Senha</label>
+        <input class="input" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:4px;">
+        Entrar
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Não tem conta? <a href="cadastro.html">Criar conta</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    window.location.href = 'dashboard.html';
+  });
+</script>
+
+<script type="module">
+  import { initWaveBg } from './wave.js';
+  initWaveBg(document.getElementById('waveBg'), {
+    // Primary (#0F3D3E) at 11% — barely-there teal lines on off-white
+    strokeColor: 'rgba(15, 61, 62, 0.11)',
+    xGap: 20,
+    yGap: 20,
+    amplitude: 0.85,
+  });
+</script>
+</body>
+</html>

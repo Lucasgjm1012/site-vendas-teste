@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar conta — Lume</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- Wave background (full page, behind card) -->
+  <div class="wave-bg" id="waveBg"></div>
+
+  <div class="auth-card">
+    <div class="auth-card-logo">
+      <img src="../Símbolo Preto.png" alt="Lume">
+      <span class="brand">Lume</span>
+    </div>
+
+    <h1 class="auth-card-title">Criar conta</h1>
+    <p class="auth-card-sub">Preencha os dados para começar.</p>
+
+    <form class="auth-form" id="signupForm">
+      <div class="form-field">
+        <label class="form-label" for="name">Nome completo</label>
+        <input class="input" type="text" id="name" placeholder="Seu nome" autocomplete="name">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="email">E-mail</label>
+        <input class="input" type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password">Senha</label>
+        <input class="input" type="password" id="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password2">Confirmar senha</label>
+        <input class="input" type="password" id="password2" placeholder="Repita a senha" autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:4px;">
+        Criar conta
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Já tem conta? <a href="index.html">Entrar</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    window.location.href = 'dashboard.html';
+  });
+</script>
+
+<script type="module">
+  import { initWaveBg } from './wave.js';
+  initWaveBg(document.getElementById('waveBg'), {
+    // Slightly lighter on signup page — card is central, wave is pure texture
+    strokeColor: 'rgba(15, 61, 62, 0.09)',
+    xGap: 22,
+    yGap: 22,
+    amplitude: 0.75,
+  });
+</script>
+</body>
+</html>
