@@ -8,6 +8,10 @@
 </head>
 <body>
 
+<button class="landing-toggle is-open" id="landingToggle" title="Mostrar/ocultar formulário">
+  <span></span><span></span><span></span>
+</button>
+
 <div class="landing">
   <!-- Left: hero -->
   <div class="landing-left">
@@ -15,12 +19,12 @@
     <div class="wave-bg" id="waveBg"></div>
 
     <div class="landing-brand">
-      <img src="../Símbolo Preto.png" alt="Lume" style="height:22px;">
+      <img src="simbolo-preto.png" alt="Lume" style="height:22px;">
       <span class="landing-brand-name">Lume</span>
     </div>
 
     <div class="landing-hero">
-      <p class="landing-tagline">Propostas comerciais <em>precisas</em>,<br>do rascunho ao aceite.</p>
+      <p class="landing-tagline">Propostas comerciais <span class="tagline-rotate"><span class="tagline-sizer" aria-hidden="true">personalizadas</span><span class="tagline-word active">organizadas</span><span class="tagline-word">aprovadas</span><span class="tagline-word">mapeadas</span><span class="tagline-word">personalizadas</span><span class="tagline-word">rastreadas</span><span class="tagline-word">fechadas</span><span class="tagline-word">validadas</span><span class="tagline-word">convertidas</span></span>,<br>do rascunho ao aceite.</p>
       <p class="landing-description">
         Uma plataforma para consultores e escritórios que precisam enviar, acompanhar e fechar propostas com consistência e profissionalismo.
       </p>
@@ -77,6 +81,30 @@
     e.preventDefault();
     window.location.href = 'dashboard.html';
   });
+
+  // Rotating tagline words
+  (function() {
+    var words = document.querySelectorAll('.tagline-word');
+    var current = 0;
+    setInterval(function() {
+      var prev = current;
+      current = (current + 1) % words.length;
+      words[prev].classList.remove('active');
+      words[prev].classList.add('exiting');
+      words[current].classList.add('active');
+      setTimeout(function() { words[prev].classList.remove('exiting'); }, 600);
+    }, 2200);
+  })();
+
+  // Login panel toggle
+  (function() {
+    var btn = document.getElementById('landingToggle');
+    var panel = document.querySelector('.landing-right');
+    btn.addEventListener('click', function() {
+      var open = btn.classList.toggle('is-open');
+      panel.classList.toggle('hidden', !open);
+    });
+  })();
 </script>
 
 <script type="module">

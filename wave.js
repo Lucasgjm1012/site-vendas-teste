@@ -64,23 +64,6 @@ export function initWaveBg(container, {
   let mouse = { x: -600, y: 0, lx: 0, ly: 0, sx: -600, sy: 0, v: 0, vs: 0, a: 0, set: false };
   let lines = [], paths = [], bounding = null, raf = null;
 
-  /* Cursor dot */
-  const dot = document.createElement('div');
-  dot.style.cssText = [
-    'position:fixed',
-    'width:10px',
-    'height:10px',
-    'border-radius:50%',
-    'background:rgba(15,61,62,0.65)',
-    'pointer-events:none',
-    'transform:translate(-50%,-50%)',
-    'transition:opacity 0.3s',
-    'z-index:9999',
-    'opacity:0',
-  ].join(';');
-  document.body.appendChild(dot);
-  let dotRawX = -100, dotRawY = -100, dotX = -100, dotY = -100;
-
   /* ── Size ── */
   function setSize() {
     bounding = container.getBoundingClientRect();
@@ -122,10 +105,6 @@ export function initWaveBg(container, {
 
   /* ── Mouse ── */
   function onMouseMove(e) {
-    dotRawX = e.clientX;
-    dotRawY = e.clientY;
-    dot.style.opacity = '1';
-
     if (!bounding) return;
     const rect = container.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
@@ -150,26 +129,26 @@ export function initWaveBg(container, {
         p.wave.x = Math.cos(n) * 11 * A;
         p.wave.y = Math.sin(n) * 5  * A;
 
-        /* Cursor repulsion — stronger radius, larger displacement */
+        /* Cursor repulsion */
         const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
         const d  = Math.hypot(dx, dy);
-        const l  = Math.max(240, mouse.vs * 1.8);
+        const l  = Math.max(140, mouse.vs);
         if (d < l) {
           const s = 1 - d / l;
           const f = Math.cos(d * 0.001) * s;
-          p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00072 * A;
-          p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00072 * A;
+          p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00028 * A;
+          p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00028 * A;
         }
 
-        /* Spring restore — softer spring = bigger sustained displacement */
-        p.cursor.vx += (0 - p.cursor.x) * 0.007;
-        p.cursor.vy += (0 - p.cursor.y) * 0.007;
-        p.cursor.vx *= 0.91;
-        p.cursor.vy *= 0.91;
+        /* Spring restore */
+        p.cursor.vx += (0 - p.cursor.x) * 0.012;
+        p.cursor.vy += (0 - p.cursor.y) * 0.012;
+        p.cursor.vx *= 0.93;
+        p.cursor.vy *= 0.93;
         p.cursor.x  += p.cursor.vx;
         p.cursor.y  += p.cursor.vy;
-        p.cursor.x   = Math.min(80, Math.max(-80, p.cursor.x));
-        p.cursor.y   = Math.min(80, Math.max(-80, p.cursor.y));
+        p.cursor.x   = Math.min(45, Math.max(-45, p.cursor.x));
+        p.cursor.y   = Math.min(45, Math.max(-45, p.cursor.y));
       });
     });
   }
@@ -195,14 +174,8 @@ export function initWaveBg(container, {
 
   /* ── Tick ── */
   function tick(t) {
-    /* Animate cursor dot with slight lag */
-    dotX += (dotRawX - dotX) * 0.18;
-    dotY += (dotRawY - dotY) * 0.18;
-    dot.style.left = dotX + 'px';
-    dot.style.top  = dotY + 'px';
-
-    mouse.sx += (mouse.x - mouse.sx) * 0.12;
-    mouse.sy += (mouse.y - mouse.sy) * 0.12;
+    mouse.sx += (mouse.x - mouse.sx) * 0.1;
+    mouse.sy += (mouse.y - mouse.sy) * 0.1;
 
     const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
     const d  = Math.hypot(dx, dy);
@@ -232,6 +205,5 @@ export function initWaveBg(container, {
     window.removeEventListener('resize',    onResize);
     window.removeEventListener('mousemove', onMouseMove);
     svg.remove();
-    dot.remove();
   };
 }
