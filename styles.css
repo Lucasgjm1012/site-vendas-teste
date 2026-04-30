@@ -420,6 +420,46 @@ tbody tr:hover td { background: var(--color-surface); }
 .mt-16 { margin-top: 16px; }    .mt-24 { margin-top: 24px; }
 .empty-state { padding: 48px 24px; text-align: center; color: var(--color-text-secondary); font-size: 14px; }
 
+/* ── Proposal Drawer ── */
+.prop-drawer-overlay { position: fixed; inset: 0; background: rgba(28,28,26,0.45); z-index: 450; opacity: 0; pointer-events: none; transition: opacity 200ms; }
+.prop-drawer-overlay.open { opacity: 1; pointer-events: all; }
+.prop-drawer {
+  position: fixed; top: 0; right: 0;
+  width: 440px; max-width: 95vw; height: 100vh;
+  background: var(--color-card); border-left: 1px solid var(--color-border);
+  z-index: 451; display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 240ms cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+.prop-drawer.open { transform: translateX(0); }
+.prop-drawer-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--color-border); display: flex; align-items: flex-start; gap: 12px; flex-shrink: 0; }
+.prop-drawer-title { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--color-text); line-height: 1.3; margin-bottom: 2px; }
+.prop-drawer-subtitle { font-size: 12px; color: var(--color-text-secondary); }
+.prop-drawer-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.prop-drawer-footer { padding: 16px 24px; border-top: 1px solid var(--color-border); display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.prop-form-label { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 6px; display: block; }
+.prop-form-label .opt { font-size: 10px; text-transform: none; letter-spacing: 0; opacity: 0.7; margin-left: 4px; }
+.prop-docs-zone { border: 1.5px dashed var(--color-border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: border-color 200ms, background 200ms; }
+.prop-docs-zone:hover { border-color: var(--color-primary); background: rgba(15,61,62,0.03); }
+.prop-docs-zone-icon { font-size: 20px; margin-bottom: 5px; }
+.prop-docs-zone-text { font-size: 12px; color: var(--color-text-secondary); }
+.prop-docs-zone-sub  { font-size: 11px; color: var(--color-text-secondary); opacity: 0.6; margin-top: 3px; }
+.prop-doc-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.prop-doc-item { display: flex; align-items: center; gap: 10px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 8px 10px; }
+.prop-doc-icon { font-size: 15px; flex-shrink: 0; }
+.prop-doc-name { font-size: 12px; color: var(--color-text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prop-doc-size { font-size: 11px; color: var(--color-text-secondary); flex-shrink: 0; }
+.prop-doc-remove { background: none; border: none; color: var(--color-text-secondary); cursor: pointer; font-size: 13px; padding: 0 2px; transition: color 150ms; flex-shrink: 0; line-height: 1; }
+.prop-doc-remove:hover { color: var(--color-danger); }
+.prop-drawer-del { background: none; border: 1px solid rgba(155,44,44,0.2); border-radius: var(--radius); padding: 8px 14px; color: var(--color-danger); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 200ms; font-family: var(--font-body); margin-right: auto; }
+.prop-drawer-del:hover { background: rgba(155,44,44,0.06); border-color: var(--color-danger); }
+.textarea-input { resize: vertical; min-height: 80px; }
+/* drag & drop */
+.kanban-col.drag-over { outline: 2px dashed var(--color-primary); outline-offset: -2px; background: rgba(15,61,62,0.05); }
+.prop-card.dragging   { opacity: 0.38; cursor: grabbing; }
+.kanban-col-cards     { min-height: 60px; }
+
 ::-webkit-scrollbar       { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }

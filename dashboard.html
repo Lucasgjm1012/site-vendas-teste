@@ -350,51 +350,69 @@
 
 </div><!-- /app -->
 
-<!-- ── Modal: Nova Proposta ── -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Nova proposta</span>
-      <button class="btn-icon" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+<!-- ── Proposal Drawer ── -->
+<div class="prop-drawer-overlay" id="propDrawerOverlay" onclick="closePropDrawer()"></div>
+<div class="prop-drawer" id="propDrawer">
+  <div class="prop-drawer-header">
+    <div style="flex:1;min-width:0;">
+      <div class="prop-drawer-title" id="pdTitle2"></div>
+      <div class="prop-drawer-subtitle" id="pdSubtitle2">Preencha os dados abaixo</div>
     </div>
-    <div class="modal-body">
-      <div class="form-row-2">
-        <div class="form-field">
-          <label class="form-label">Cliente</label>
-          <input class="input" id="newClient" placeholder="Nome do cliente">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Fase inicial</label>
-          <select class="input" id="newStage">
-            <option value="redigir">A Redigir</option>
-            <option value="aguarda_design">Aguarda Design</option>
-            <option value="com_design">Com Design</option>
-            <option value="aguarda_validacao">Aguarda Validação</option>
-            <option value="validada">Validada</option>
-          </select>
-        </div>
+    <button class="btn-icon" onclick="closePropDrawer()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+  <div class="prop-drawer-body">
+    <div class="form-field">
+      <label class="prop-form-label">Nome da proposta / projeto</label>
+      <input class="input" id="pdTitle" placeholder="Ex: Consultoria Estratégica Q2 2026">
+    </div>
+    <div class="form-field">
+      <label class="prop-form-label">Cliente</label>
+      <input class="input" id="pdClient" placeholder="Ex: Ventura &amp; Associados">
+    </div>
+    <div class="form-row-2">
+      <div class="form-field">
+        <label class="prop-form-label">Valor (R$)</label>
+        <input class="input" id="pdValue" type="text" placeholder="0,00" oninput="fmtValorInput(this)">
       </div>
       <div class="form-field">
-        <label class="form-label">Título da proposta</label>
-        <input class="input" id="newTitle" placeholder="Descreva brevemente o escopo">
-      </div>
-      <div class="form-row-2">
-        <div class="form-field">
-          <label class="form-label">Valor (R$)</label>
-          <input class="input" id="newValue" type="number" placeholder="0,00" step="0.01">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Prazo</label>
-          <input class="input" id="newDeadline" type="date">
-        </div>
+        <label class="prop-form-label">Prazo</label>
+        <input class="input" id="pdDeadline" type="date">
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="addProposal()">Adicionar proposta</button>
+    <div class="form-field">
+      <label class="prop-form-label">Status / Fase</label>
+      <select class="input" id="pdStage" onchange="onPdStageChange()">
+        <option value="redigir">A Redigir</option>
+        <option value="aguarda_design">Aguarda Design</option>
+        <option value="com_design">Com Design</option>
+        <option value="aguarda_validacao">Aguarda Validação</option>
+        <option value="validada">Validada</option>
+      </select>
     </div>
+    <div class="form-field">
+      <label class="prop-form-label">Observação <span class="opt">(opcional)</span></label>
+      <textarea class="input textarea-input" id="pdObs" placeholder="Notas, contexto ou detalhes adicionais..."></textarea>
+    </div>
+    <div class="form-field">
+      <label class="prop-form-label">Documentos <span class="opt">(opcional)</span></label>
+      <div class="prop-docs-zone" id="pdDocsZone" onclick="document.getElementById('pdFileInput').click()">
+        <div class="prop-docs-zone-icon">📎</div>
+        <div class="prop-docs-zone-text">Clique para anexar arquivos</div>
+        <div class="prop-docs-zone-sub">PDF, Word, PowerPoint, imagens…</div>
+      </div>
+      <input type="file" id="pdFileInput" multiple style="display:none" onchange="handlePdFileAttach(this)">
+      <div class="prop-doc-list" id="pdDocList"></div>
+    </div>
+  </div>
+  <div class="prop-drawer-footer">
+    <button class="prop-drawer-del" id="pdDeleteBtn" onclick="deletePropDrawer()" style="display:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Excluir
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="closePropDrawer()">Cancelar</button>
+    <button class="btn btn-primary btn-sm" onclick="savePropDrawer()">Salvar</button>
   </div>
 </div>
 
@@ -632,7 +650,10 @@ function renderKanban(data) {
       ? `<p style="font-size:12px;color:var(--color-text-secondary);padding:8px 4px;text-align:center;opacity:0.6;">Nenhuma proposta.</p>`
       : cards.map(p => propCardHtml(p)).join('');
     return `
-      <div class="kanban-col" data-stage="${stageKey}">
+      <div class="kanban-col" data-stage="${stageKey}"
+        ondragover="onColDragOver(event,'${stageKey}')"
+        ondragleave="onColDragLeave(event,'${stageKey}')"
+        ondrop="onColDrop(event,'${stageKey}')">
         <div class="kanban-col-header">
           <span class="kanban-col-title">
             <span style="width:7px;height:7px;border-radius:50%;background:${cfg.fillColor};display:inline-block;"></span>
@@ -684,9 +705,14 @@ function propCardHtml(p) {
     return '';
   })();
 
-  return `<div class="prop-card" id="card-${p.id}">
+  const docsIcon = p.docs && p.docs.length ? ' 📎' : '';
+  return `<div class="prop-card" id="card-${p.id}"
+    draggable="true"
+    ondragstart="onCardDragStart(event,${p.id})"
+    ondragend="onCardDragEnd(event)"
+    onclick="openPropDrawer(${p.id})">
     <div class="prop-card-client">${p.client}</div>
-    <div class="prop-card-title">${p.title}</div>
+    <div class="prop-card-title">${p.title}${docsIcon}</div>
     <div class="prop-card-footer">
       <div class="prop-card-row">
         <span class="prop-card-value">${brl(p.value)}</span>
@@ -840,33 +866,217 @@ function renderUpcoming() {
     </div>`).join('');
 }
 
-/* ─── Modal ─────────────────────────────────────────────────────── */
-function openModal() {
-  document.getElementById('modalOverlay').classList.add('open');
-  document.getElementById('newDeadline').valueAsDate = new Date(Date.now() + 14*86400000);
+/* ─── Drag & Drop ─────────────────────────────────────────────── */
+let _draggingId = null;
+
+function onCardDragStart(e, id) {
+  _draggingId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => {
+    const el = document.getElementById('card-' + id);
+    if (el) el.classList.add('dragging');
+  }, 0);
 }
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
+function onCardDragEnd(e) {
+  if (_draggingId !== null) {
+    const el = document.getElementById('card-' + _draggingId);
+    if (el) el.classList.remove('dragging');
+  }
+  document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
 }
-function closeModalOnOverlay(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
+function onColDragOver(e, stage) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.getElementById('card-' + _draggingId)?.classList.remove('dragging');
+  document.querySelector(`.kanban-col[data-stage="${stage}"]`)?.classList.add('drag-over');
 }
-function addProposal() {
-  const client   = document.getElementById('newClient').value.trim();
-  const title    = document.getElementById('newTitle').value.trim();
-  const value    = parseFloat(document.getElementById('newValue').value) || 0;
-  const deadline = new Date(document.getElementById('newDeadline').value + 'T12:00:00');
-  const stage    = document.getElementById('newStage').value;
-  if (!client || !title) return;
-  proposals.push({ id:nextId++, client, title, stage, value, deadline, created:new Date() });
-  closeModal();
+function onColDragLeave(e, stage) {
+  const col = document.querySelector(`.kanban-col[data-stage="${stage}"]`);
+  if (col && !col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+}
+function onColDrop(e, stage) {
+  e.preventDefault();
+  document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
+  if (_draggingId === null) return;
+  const p = proposals.find(x => x.id === _draggingId);
+  if (p && p.stage !== stage) {
+    p.stage = stage;
+    renderDashboard();
+    renderKanban(proposals);
+    renderOrcamentos();
+  }
+  _draggingId = null;
+}
+
+/* ─── Proposal Drawer ─────────────────────────────────────────── */
+let _pdEditId = null;
+let _pdDocs   = [];
+
+function numToInput(v) {
+  if (!v && v !== 0) return '';
+  return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function parseBRL(str) {
+  if (!str) return 0;
+  return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+}
+function fmtValorInput(input) {
+  const raw = input.value.replace(/\D/g, '');
+  if (!raw) { input.value = ''; return; }
+  const cents = parseInt(raw, 10);
+  input.value = (cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function getPdDocIcon(type) {
+  if (!type) return '📄';
+  if (type.includes('pdf')) return '📕';
+  if (type.includes('word') || type.includes('document')) return '📘';
+  if (type.includes('presentation') || type.includes('powerpoint')) return '📙';
+  if (type.includes('image')) return '🖼';
+  if (type.includes('spreadsheet') || type.includes('excel')) return '📗';
+  return '📄';
+}
+function fmtBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/(1024*1024)).toFixed(1) + ' MB';
+}
+function renderPdDocList() {
+  const list = document.getElementById('pdDocList');
+  if (!list) return;
+  list.innerHTML = _pdDocs.map((d, i) =>
+    `<div class="prop-doc-item">
+      <span class="prop-doc-icon">${getPdDocIcon(d.type)}</span>
+      <span class="prop-doc-name" title="${d.name}">${d.name}</span>
+      <span class="prop-doc-size">${fmtBytes(d.size)}</span>
+      <button class="prop-doc-remove" onclick="removePdDoc(${i})" title="Remover">✕</button>
+    </div>`
+  ).join('');
+}
+function removePdDoc(idx) {
+  _pdDocs.splice(idx, 1);
+  renderPdDocList();
+}
+function handlePdFileAttach(input) {
+  Array.from(input.files).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      _pdDocs.push({ name: f.name, size: f.size, type: f.type, dataUrl: ev.target.result });
+      renderPdDocList();
+    };
+    reader.readAsDataURL(f);
+  });
+  input.value = '';
+}
+
+function openPropDrawer(id) {
+  _pdEditId = id;
+  _pdDocs   = [];
+  const overlay = document.getElementById('propDrawerOverlay');
+  const drawer  = document.getElementById('propDrawer');
+  const delBtn  = document.getElementById('pdDeleteBtn');
+
+  if (id !== null) {
+    const p = proposals.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('pdTitle2').textContent    = p.title;
+    document.getElementById('pdSubtitle2').textContent = p.client;
+    document.getElementById('pdTitle').value    = p.title;
+    document.getElementById('pdClient').value   = p.client;
+    document.getElementById('pdValue').value    = numToInput(p.value);
+    document.getElementById('pdDeadline').value = p.deadline instanceof Date
+      ? p.deadline.toISOString().slice(0,10)
+      : (p.deadline || '');
+    document.getElementById('pdStage').value    = p.stage;
+    document.getElementById('pdObs').value      = p.obs || '';
+    _pdDocs = p.docs ? [...p.docs] : [];
+    delBtn.style.display = '';
+  } else {
+    document.getElementById('pdTitle2').textContent    = 'Nova proposta';
+    document.getElementById('pdSubtitle2').textContent = 'Preencha os dados abaixo';
+    document.getElementById('pdTitle').value    = '';
+    document.getElementById('pdClient').value   = '';
+    document.getElementById('pdValue').value    = '';
+    document.getElementById('pdDeadline').valueAsDate = new Date(Date.now() + 14*86400000);
+    document.getElementById('pdStage').value    = 'redigir';
+    document.getElementById('pdObs').value      = '';
+    _pdDocs = [];
+    delBtn.style.display = 'none';
+  }
+  renderPdDocList();
+  overlay.classList.add('open');
+  drawer.classList.add('open');
+
+  const zone = document.getElementById('pdDocsZone');
+  zone.ondragover  = e => { e.preventDefault(); zone.style.borderColor = 'var(--color-primary)'; };
+  zone.ondragleave = () => { zone.style.borderColor = ''; };
+  zone.ondrop = e => {
+    e.preventDefault();
+    zone.style.borderColor = '';
+    Array.from(e.dataTransfer.files).forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        _pdDocs.push({ name: f.name, size: f.size, type: f.type, dataUrl: ev.target.result });
+        renderPdDocList();
+      };
+      reader.readAsDataURL(f);
+    });
+  };
+}
+
+function closePropDrawer() {
+  document.getElementById('propDrawerOverlay').classList.remove('open');
+  document.getElementById('propDrawer').classList.remove('open');
+}
+
+function onPdStageChange() {
+  if (_pdEditId === null) return;
+  const newStage = document.getElementById('pdStage').value;
+  const p = proposals.find(x => x.id === _pdEditId);
+  if (p) {
+    p.stage = newStage;
+    renderDashboard();
+    renderKanban(proposals);
+    renderOrcamentos();
+  }
+}
+
+function savePropDrawer() {
+  const title    = document.getElementById('pdTitle').value.trim();
+  const client   = document.getElementById('pdClient').value.trim();
+  const value    = parseBRL(document.getElementById('pdValue').value);
+  const deadlineVal = document.getElementById('pdDeadline').value;
+  const deadline = deadlineVal ? new Date(deadlineVal + 'T12:00:00') : new Date(Date.now() + 14*86400000);
+  const stage    = document.getElementById('pdStage').value;
+  const obs      = document.getElementById('pdObs').value.trim();
+  if (!title || !client) {
+    if (!title) document.getElementById('pdTitle').focus();
+    else document.getElementById('pdClient').focus();
+    return;
+  }
+  if (_pdEditId !== null) {
+    const p = proposals.find(x => x.id === _pdEditId);
+    if (p) { p.title = title; p.client = client; p.value = value; p.deadline = deadline; p.stage = stage; p.obs = obs; p.docs = [..._pdDocs]; }
+  } else {
+    proposals.push({ id: nextId++, client, title, stage, value, deadline, created: new Date(), obs, docs: [..._pdDocs] });
+  }
+  closePropDrawer();
   renderDashboard();
   renderKanban(proposals);
   renderOrcamentos();
-  document.getElementById('newClient').value = '';
-  document.getElementById('newTitle').value  = '';
-  document.getElementById('newValue').value  = '';
 }
+
+function deletePropDrawer() {
+  if (_pdEditId === null) return;
+  proposals = proposals.filter(x => x.id !== _pdEditId);
+  closePropDrawer();
+  renderDashboard();
+  renderKanban(proposals);
+  renderOrcamentos();
+}
+
+/* kept for back-compat with any inline callers */
+function openModal() { openPropDrawer(null); }
+function closeModal() { closePropDrawer(); }
 
 /* ─── Init dashboard ─────────────────────────────────────────── */
 function renderDashboard() {
@@ -979,7 +1189,7 @@ function doLogout() {
 /* ─── Keyboard ─────────────────────────────────────────────── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeModal();
+    closePropDrawer();
     closeCalDetail();
     closeLogout();
     document.getElementById('profileMenu').classList.remove('open');
