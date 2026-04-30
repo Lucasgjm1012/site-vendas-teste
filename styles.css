@@ -234,14 +234,14 @@ tbody tr:hover td { background: var(--color-surface); }
 .upload-area.has-file label { color: var(--color-success); }
 
 /* ── Calendar ── */
-#sec-calendario     { margin: 0 -32px; }
-.cal-section-header { padding: 0 32px 24px; }
-.calendar-card    { background: var(--color-card); border-top: 1px solid var(--color-border); padding: 24px 32px; }
-.calendar-nav     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+#sec-calendario { margin: 0 -32px; padding-left: 20px; height: calc(100vh - var(--topbar-height)); display: flex; flex-direction: column; overflow: hidden; }
+.cal-section-header { padding: 20px 32px 14px 0; flex-shrink: 0; }
+.calendar-card { flex: 1; min-height: 0; background: var(--color-card); border-top: 1px solid var(--color-border); border-left: 1px solid var(--color-border); padding: 14px 20px 0; display: flex; flex-direction: column; }
+.calendar-nav     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-shrink: 0; }
 .cal-month        { font-family: var(--font-display); font-size: 16px; font-weight: 500; color: var(--color-text); }
-.cal-grid         { display: grid; grid-template-columns: repeat(7, 1fr); }
-.cal-weekday      { padding: 8px 0; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); text-align: center; border-bottom: 1px solid var(--color-border); }
-.cal-day          { min-height: 96px; padding: 6px; border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); transition: background 150ms; }
+.cal-grid         { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: auto repeat(6, 1fr); margin: 0 -20px; }
+.cal-weekday      { padding: 6px 0; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); text-align: center; border-bottom: 1px solid var(--color-border); }
+.cal-day          { padding: 6px; border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); transition: background 150ms; }
 .cal-day:nth-child(7n) { border-right: none; }
 .cal-day:hover    { background: var(--color-surface); }
 .cal-day.other    { opacity: 0.3; pointer-events: none; }
@@ -255,8 +255,8 @@ tbody tr:hover td { background: var(--color-surface); }
 .cal-event.ev-validada   { background: rgba(45,106,79,0.1);    color: var(--color-success); }
 
 .cal-sidebar        { display: flex; flex-direction: column; gap: 16px; }
-.cal-bottom-row     { display: grid; grid-template-columns: 1fr 220px; gap: 0; background: var(--color-card); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
-.cal-upcoming       { background: transparent; border: none; border-right: 1px solid var(--color-border); padding: 20px 32px; }
+.cal-bottom-row     { flex-shrink: 0; display: grid; grid-template-columns: 1fr 220px; background: var(--color-card); border-top: 1px solid var(--color-border); border-left: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+.cal-upcoming       { background: transparent; border: none; border-right: 1px solid var(--color-border); padding: 14px 20px; }
 .cal-upcoming-title { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 14px; }
 .cal-upcoming-item  { padding: 10px 0; border-bottom: 1px solid var(--color-border); cursor: pointer; }
 .cal-upcoming-item:hover .cal-upcoming-name { color: var(--color-primary); }
@@ -265,7 +265,7 @@ tbody tr:hover td { background: var(--color-surface); }
 .cal-upcoming-client { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
 .cal-upcoming-date   { font-size: 11px; font-family: var(--font-mono); color: var(--color-text-secondary); margin-top: 4px; }
 
-.cal-legend       { background: transparent; border: none; padding: 20px 32px; }
+.cal-legend       { background: transparent; border: none; padding: 14px 20px; }
 .cal-legend-title { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 12px; }
 .cal-legend-item  { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
 .cal-legend-item:last-child { margin-bottom: 0; }
@@ -469,3 +469,21 @@ tbody tr:hover td { background: var(--color-surface); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }
+
+/* ── Settings modal ── */
+.settings-modal { max-width: 520px; max-height: 88vh; overflow-y: auto; }
+.settings-section { padding: 20px 0; border-bottom: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 16px; }
+.settings-section:last-child { border-bottom: none; padding-bottom: 4px; }
+.settings-section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-secondary); }
+.password-wrapper { position: relative; display: flex; align-items: center; }
+.password-wrapper .input { padding-right: 44px; }
+.password-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); }
+.team-member-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+.team-member-item:last-child { border-bottom: none; }
+.team-member-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-surface); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 11px; font-weight: 500; color: var(--color-text); flex-shrink: 0; }
+.team-member-info { flex: 1; min-width: 0; }
+.team-member-name { font-size: 13px; font-weight: 500; color: var(--color-text); }
+.team-member-email { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
+.team-member-remove:hover { color: var(--color-danger) !important; }
+.settings-add-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 13px; font-weight: 500; color: var(--color-text); cursor: pointer; transition: background 150ms, border-color 150ms; font-family: var(--font-body); }
+.settings-add-btn:hover { background: var(--color-border); }
