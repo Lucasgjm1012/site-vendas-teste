@@ -267,6 +267,7 @@
             <button class="btn-icon" onclick="calNav(1)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
+            <button class="btn btn-secondary btn-sm" onclick="calGoToday()" style="margin-left:12px;font-size:12px;padding:4px 10px;">Hoje</button>
           </div>
           <div class="cal-grid" id="calGrid"></div>
         </div>
@@ -432,6 +433,27 @@
     <div class="modal-footer">
       <button class="btn btn-secondary btn-sm" onclick="goToProposal(_calDetailId)">Ver proposta completa</button>
       <button class="btn btn-primary btn-sm" id="calDetailSaveBtn" style="display:none" onclick="saveCalEdit()">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal: Confirmar exclusão de proposta ── -->
+<div class="modal-overlay" id="deleteConfirmOverlay" onclick="closeDeleteConfirmOnOverlay(event)">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <span class="modal-title">Excluir proposta</span>
+      <button class="btn-icon" onclick="closeDeleteConfirm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <p style="font-size:14px;color:var(--color-text-secondary);line-height:22px;">
+      Tem certeza que deseja excluir <strong id="deleteConfirmName" style="color:var(--color-text);"></strong>?
+      Todos os dados serão excluídos permanentemente.
+      <strong style="color:var(--color-danger);">Esta ação é irreversível.</strong>
+    </p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeDeleteConfirm()">Cancelar</button>
+      <button class="btn" style="background:var(--color-danger);color:#fff;border:none;" onclick="confirmDeleteProp()">Excluir proposta</button>
     </div>
   </div>
 </div>
@@ -839,9 +861,17 @@ function renderCalendar() {
     const evHtml  = events.map(p => {
       const cfg = stageConfig[p.stage];
       const name = p.client.split(' ')[0];
-      return `<div class="cal-event ${cfg.evCls}" onclick="showCalDetail(${p.id})" title="${p.client} — ${p.title}" style="cursor:pointer;">${name}</div>`;
+      return `<div class="cal-event ${cfg.evCls}"
+        draggable="true"
+        ondragstart="onCalEventDragStart(event,${p.id})"
+        ondragend="onCalEventDragEnd(event)"
+        onclick="showCalDetail(${p.id})"
+        title="${p.client} — ${p.title}">${name}</div>`;
     }).join('');
-    daysHtml += `<div class="cal-day${isToday?' today':''}"><div class="cal-day-num">${d}</div>${evHtml}</div>`;
+    daysHtml += `<div class="cal-day${isToday?' today':''}"
+      ondragover="onCalDayDragOver(event)"
+      ondragleave="onCalDayDragLeave(event)"
+      ondrop="onCalDayDrop(event,${calYear},${calMonth},${d})"><div class="cal-day-num">${d}</div>${evHtml}</div>`;
   }
 
   // Next month padding
@@ -876,7 +906,51 @@ function renderUpcoming() {
     </div>`).join('');
 }
 
-/* ─── Drag & Drop ─────────────────────────────────────────────── */
+/* ─── Calendar drag & drop ───────────────────────────────────── */
+let _calDraggingId = null;
+
+function onCalEventDragStart(e, id) {
+  _calDraggingId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.stopPropagation();
+}
+function onCalEventDragEnd(e) {
+  _calDraggingId = null;
+  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('cal-drop-target'));
+}
+function onCalDayDragOver(e) {
+  if (_calDraggingId === null) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('cal-drop-target');
+}
+function onCalDayDragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    e.currentTarget.classList.remove('cal-drop-target');
+  }
+}
+function onCalDayDrop(e, year, month, day) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('cal-drop-target');
+  if (_calDraggingId === null) return;
+  const p = proposals.find(x => x.id === _calDraggingId);
+  if (p) {
+    p.deadline = new Date(year, month, day, 12, 0, 0);
+    renderCalendar();
+    renderDashboard();
+    renderKanban(proposals);
+    renderOrcamentos();
+  }
+  _calDraggingId = null;
+}
+function calGoToday() {
+  const now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
+  renderCalendar();
+}
+
+/* ─── Kanban Drag & Drop ─────────────────────────────────────── */
 let _draggingId = null;
 
 function onCardDragStart(e, id) {
@@ -1077,7 +1151,21 @@ function savePropDrawer() {
 
 function deletePropDrawer() {
   if (_pdEditId === null) return;
+  const p = proposals.find(x => x.id === _pdEditId);
+  if (!p) return;
+  document.getElementById('deleteConfirmName').textContent = `"${p.title}"`;
+  document.getElementById('deleteConfirmOverlay').classList.add('open');
+}
+function closeDeleteConfirm() {
+  document.getElementById('deleteConfirmOverlay').classList.remove('open');
+}
+function closeDeleteConfirmOnOverlay(e) {
+  if (e.target === document.getElementById('deleteConfirmOverlay')) closeDeleteConfirm();
+}
+function confirmDeleteProp() {
+  if (_pdEditId === null) return;
   proposals = proposals.filter(x => x.id !== _pdEditId);
+  closeDeleteConfirm();
   closePropDrawer();
   renderDashboard();
   renderKanban(proposals);
@@ -1303,6 +1391,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closePropDrawer();
     closeCalDetail();
+    closeDeleteConfirm();
     closeLogout();
     document.getElementById('profileMenu').classList.remove('open');
   }
