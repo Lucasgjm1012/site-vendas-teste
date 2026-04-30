@@ -254,38 +254,36 @@
       <!-- ════════════ SECTION: CALENDÁRIO ════════════ -->
       <section id="sec-calendario" class="section">
 
-        <div class="flex-between mb-24">
+        <div class="cal-section-header">
           <h2 style="font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--color-text);">Calendário de prazos</h2>
         </div>
 
-        <div class="calendar-layout">
-          <div class="calendar-card">
-            <div class="calendar-nav">
-              <button class="btn-icon" onclick="calNav(-1)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-              <span class="cal-month" id="calMonthLabel"></span>
-              <button class="btn-icon" onclick="calNav(1)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-              </button>
-            </div>
-            <div class="cal-grid" id="calGrid"></div>
+        <div class="calendar-card">
+          <div class="calendar-nav">
+            <button class="btn-icon" onclick="calNav(-1)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <span class="cal-month" id="calMonthLabel"></span>
+            <button class="btn-icon" onclick="calNav(1)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
           </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
 
-          <!-- Bottom row: prazos + legenda -->
-          <div class="cal-bottom-row">
-            <div class="cal-upcoming">
-              <p class="cal-upcoming-title">Prazos próximos</p>
-              <div id="upcomingList"></div>
-            </div>
-            <div class="cal-legend">
-              <p class="cal-legend-title">Legenda</p>
-              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-neutral-status);"></div>A Redigir</div>
-              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Design</div>
-              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-accent);"></div>Com Design</div>
-              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Validação</div>
-              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-success);"></div>Validada</div>
-            </div>
+        <!-- Bottom row: prazos + legenda — full width -->
+        <div class="cal-bottom-row">
+          <div class="cal-upcoming">
+            <p class="cal-upcoming-title">Prazos próximos</p>
+            <div id="upcomingList"></div>
+          </div>
+          <div class="cal-legend">
+            <p class="cal-legend-title">Legenda</p>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-neutral-status);"></div>A Redigir</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Design</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-accent);"></div>Com Design</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Validação</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-success);"></div>Validada</div>
           </div>
         </div>
 
@@ -421,11 +419,20 @@
   <div class="modal" style="max-width:480px;">
     <div class="modal-header">
       <span class="modal-title" id="calDetailTitle"></span>
-      <button class="btn-icon" onclick="closeCalDetail()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <button class="btn-icon" id="calDetailEditBtn" onclick="toggleCalEdit()" title="Editar proposta">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+        <button class="btn-icon" onclick="closeCalDetail()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
     </div>
     <div id="calDetailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" onclick="goToProposal(_calDetailId)">Ver proposta completa</button>
+      <button class="btn btn-primary btn-sm" id="calDetailSaveBtn" style="display:none" onclick="saveCalEdit()">Salvar alterações</button>
+    </div>
   </div>
 </div>
 
@@ -486,6 +493,9 @@ function daysUntil(d) {
   if (diff === 0) return 'Hoje';
   if (diff === 1) return 'Amanhã';
   return `em ${diff} dias`;
+}
+function escapeHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 /* ─── Greeting ─────────────────────────────────────────────── */
@@ -1102,27 +1112,42 @@ function renderDashboard() {
 }
 
 /* ─── Calendar detail modal ─────────────────────────────────── */
+let _calDetailId = null;
+let _calEditing  = false;
+
 function showCalDetail(id) {
+  _calDetailId = id;
+  _calEditing  = false;
   const p = proposals.find(x => x.id === id);
   if (!p) return;
-  const cfg = stageConfig[p.stage];
   document.getElementById('calDetailTitle').textContent = p.title;
+  document.getElementById('calDetailSaveBtn').style.display = 'none';
+  document.getElementById('calDetailEditBtn').classList.remove('cal-edit-active');
+  renderCalDetailView(p);
+  document.getElementById('calDetailOverlay').classList.add('open');
+}
+
+function renderCalDetailView(p) {
+  const cfg = stageConfig[p.stage];
   const prevHtml = p.prev
     ? `<div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.03em;">Anterior</span>
         <span style="font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);text-decoration:line-through;">${brl(p.prev)}</span>
-        <span style="font-size:11px;color:${(p.value - p.prev) >= 0 ? 'var(--color-success)' : 'var(--color-danger)'};">${(p.value - p.prev) >= 0 ? '+' : ''}${Math.round((p.value - p.prev)/p.prev*100)}%</span>
+        <span style="font-size:11px;color:${(p.value-p.prev)>=0?'var(--color-success)':'var(--color-danger)'};">${(p.value-p.prev)>=0?'+':''}${Math.round((p.value-p.prev)/p.prev*100)}%</span>
        </div>`
     : '';
   const validatedHtml = p.validated
     ? `<div><p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Validada em</p><p style="font-size:14px;">${fmtDate(p.validated)}</p></div>`
+    : '';
+  const obsHtml = p.obs
+    ? `<div><p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Observação</p><p style="font-size:13px;color:var(--color-text-secondary);line-height:20px;">${escapeHtml(p.obs)}</p></div>`
     : '';
   document.getElementById('calDetailBody').innerHTML = `
     <div style="display:flex;flex-direction:column;gap:20px;padding-top:4px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div>
           <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Cliente</p>
-          <p style="font-size:14px;">${p.client}</p>
+          <p style="font-size:14px;">${escapeHtml(p.client)}</p>
         </div>
         <div>
           <p style="font-size:11px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px;">Fase</p>
@@ -1148,11 +1173,98 @@ function showCalDetail(id) {
         </div>
         ${validatedHtml}
       </div>
+      ${obsHtml}
     </div>`;
-  document.getElementById('calDetailOverlay').classList.add('open');
 }
+
+function renderCalDetailEdit(p) {
+  const stageOpts = Object.entries(stageConfig).map(([k,cfg]) =>
+    `<option value="${k}"${p.stage===k?' selected':''}>${cfg.label}</option>`
+  ).join('');
+  document.getElementById('calDetailBody').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:16px;padding-top:4px;">
+      <div class="form-field">
+        <label class="prop-form-label">Nome da proposta</label>
+        <input class="input" id="cdTitle" value="${escapeHtml(p.title)}">
+      </div>
+      <div class="form-field">
+        <label class="prop-form-label">Cliente</label>
+        <input class="input" id="cdClient" value="${escapeHtml(p.client)}">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="form-field">
+          <label class="prop-form-label">Valor (R$)</label>
+          <input class="input" id="cdValue" type="text" value="${numToInput(p.value)}" oninput="fmtValorInput(this)">
+        </div>
+        <div class="form-field">
+          <label class="prop-form-label">Prazo</label>
+          <input class="input" id="cdDeadline" type="date" value="${p.deadline instanceof Date ? p.deadline.toISOString().slice(0,10) : (p.deadline||'')}">
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="prop-form-label">Status / Fase</label>
+        <select class="input" id="cdStage">${stageOpts}</select>
+      </div>
+      <div class="form-field">
+        <label class="prop-form-label">Observação <span class="opt">(opcional)</span></label>
+        <textarea class="input textarea-input" id="cdObs" placeholder="Notas, contexto ou detalhes...">${escapeHtml(p.obs||'')}</textarea>
+      </div>
+    </div>`;
+}
+
+function toggleCalEdit() {
+  const p = proposals.find(x => x.id === _calDetailId);
+  if (!p) return;
+  _calEditing = !_calEditing;
+  const editBtn = document.getElementById('calDetailEditBtn');
+  const saveBtn = document.getElementById('calDetailSaveBtn');
+  if (_calEditing) {
+    editBtn.classList.add('cal-edit-active');
+    saveBtn.style.display = '';
+    renderCalDetailEdit(p);
+  } else {
+    editBtn.classList.remove('cal-edit-active');
+    saveBtn.style.display = 'none';
+    renderCalDetailView(p);
+  }
+}
+
+function saveCalEdit() {
+  const p = proposals.find(x => x.id === _calDetailId);
+  if (!p) return;
+  const title  = (document.getElementById('cdTitle')?.value || '').trim();
+  const client = (document.getElementById('cdClient')?.value || '').trim();
+  if (!title || !client) return;
+  const value      = parseBRL(document.getElementById('cdValue')?.value || '');
+  const deadlineVal = document.getElementById('cdDeadline')?.value;
+  const stage      = document.getElementById('cdStage')?.value || p.stage;
+  const obs        = (document.getElementById('cdObs')?.value || '').trim();
+  p.title    = title;
+  p.client   = client;
+  p.value    = value;
+  p.deadline = deadlineVal ? new Date(deadlineVal + 'T12:00:00') : p.deadline;
+  p.stage    = stage;
+  p.obs      = obs;
+  renderDashboard();
+  renderKanban(proposals);
+  renderOrcamentos();
+  renderCalendar();
+  _calEditing = false;
+  document.getElementById('calDetailTitle').textContent = p.title;
+  document.getElementById('calDetailSaveBtn').style.display = 'none';
+  document.getElementById('calDetailEditBtn').classList.remove('cal-edit-active');
+  renderCalDetailView(p);
+}
+
+function goToProposal(id) {
+  closeCalDetail();
+  navTo('propostas');
+  setTimeout(() => openPropDrawer(id), 80);
+}
+
 function closeCalDetail() {
   document.getElementById('calDetailOverlay').classList.remove('open');
+  _calEditing = false;
 }
 function closeCalDetailOnOverlay(e) {
   if (e.target === document.getElementById('calDetailOverlay')) closeCalDetail();
