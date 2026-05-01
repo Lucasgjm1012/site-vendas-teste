@@ -245,12 +245,13 @@ tbody tr:hover td { background: var(--color-surface); }
   margin: 0;
   z-index: 50;
   background: var(--color-bg);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: left 280ms cubic-bezier(0.4,0,0.2,1);
 }
-.cal-page { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: 24px 32px; }
+.cal-page { display: flex; flex-direction: column; min-height: 100%; padding: 24px 32px; }
 .cal-section-header { padding: 0 0 16px 0; flex-shrink: 0; }
-.calendar-card { flex: 1; min-height: 0; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
+.calendar-card { flex: 0 0 auto; height: calc(100vh - var(--topbar-height) - 260px); min-height: 380px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
 .calendar-nav { padding: 12px 20px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; flex-shrink: 0; border-bottom: 1px solid var(--color-border); }
 .cal-nav-left  { display: flex; align-items: center; }
 .cal-nav-center { display: flex; align-items: center; justify-content: center; }
@@ -272,8 +273,8 @@ tbody tr:hover td { background: var(--color-surface); }
 .cal-event.ev-validada   { background: rgba(45,106,79,0.1);    color: var(--color-success); }
 
 .cal-sidebar        { display: flex; flex-direction: column; gap: 16px; }
-.cal-bottom-row     { flex-shrink: 0; display: grid; grid-template-columns: 1fr 220px; gap: 12px; padding-top: 12px; max-height: 185px; }
-.cal-upcoming       { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 20px; overflow-y: auto; }
+.cal-bottom-row     { display: grid; grid-template-columns: 1fr 220px; gap: 12px; padding-top: 12px; padding-bottom: 24px; }
+.cal-upcoming       { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 20px; }
 .cal-upcoming-title { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px; }
 .cal-upcoming-item  { padding: 8px 0; border-bottom: 1px solid var(--color-border); cursor: pointer; }
 .cal-upcoming-item:hover .cal-upcoming-name { color: var(--color-primary); }
@@ -282,7 +283,7 @@ tbody tr:hover td { background: var(--color-surface); }
 .cal-upcoming-client { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
 .cal-upcoming-date   { font-size: 11px; font-family: var(--font-mono); color: var(--color-text-secondary); margin-top: 3px; }
 
-.cal-legend       { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 20px; overflow-y: auto; }
+.cal-legend       { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 20px; }
 .cal-legend-title { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px; }
 .cal-legend-item  { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 7px; }
 .cal-legend-item:last-child { margin-bottom: 0; }
@@ -579,27 +580,34 @@ tbody tr:hover td { background: var(--color-surface); }
 
 /* ── Hamburger / Collapsible Sidebar ── */
 .hamburger-btn {
+  display: none; /* hidden when sidebar is open */
   width: 36px; height: 36px; background: none; border: none;
   border-radius: var(--radius); cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-direction: column; align-items: center; justify-content: center;
   gap: 5px; padding: 4px; flex-shrink: 0; color: var(--color-text-secondary);
   transition: background 150ms;
 }
 .hamburger-btn:hover { background: var(--color-surface); }
 .hamburger-btn span {
   display: block; width: 16px; height: 1.5px; background: currentColor;
-  border-radius: 1px; transform-origin: center;
-  transition: transform 260ms cubic-bezier(0.4,0,0.2,1), opacity 200ms ease;
+  border-radius: 1px;
 }
-.hamburger-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.hamburger-btn.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger-btn.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.sidebar-close-btn {
+  background: none; border: none; padding: 6px; border-radius: var(--radius);
+  color: var(--color-text-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 150ms, color 150ms; flex-shrink: 0;
+}
+.sidebar-close-btn:hover { background: var(--color-surface); color: var(--color-text); }
 
 .app.sidebar-collapsed .sidebar          { transform: translateX(calc(-1 * var(--sidebar-width))); }
 .app.sidebar-collapsed .topbar           { left: 0; }
 .app.sidebar-collapsed .main             { margin-left: 0; }
 .app.sidebar-collapsed #sec-ia-propostas { left: 0; }
 .app.sidebar-collapsed #sec-calendario   { left: 0; }
+.app.sidebar-collapsed .hamburger-btn    { display: flex; }  /* show ≡ only when collapsed */
+.app.sidebar-collapsed .sidebar-close-btn { display: none; } /* hide X when collapsed */
 
 /* ── IA Gradient Background ─────────────────────────────── */
 .ia-gradient-bg {

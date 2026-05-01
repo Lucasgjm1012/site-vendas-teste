@@ -24,9 +24,14 @@
 
   <!-- ── Sidebar ── -->
   <aside class="sidebar">
-    <div class="sidebar-logo" onclick="navTo('dashboard')" style="cursor:pointer;">
-      <img src="simbolo-preto.png" alt="Lume">
-      <span class="brand">Lume</span>
+    <div class="sidebar-logo">
+      <div onclick="navTo('dashboard')" style="cursor:pointer;display:flex;align-items:center;gap:10px;flex:1;">
+        <img src="simbolo-preto.png" alt="Lume">
+        <span class="brand">Lume</span>
+      </div>
+      <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Fechar menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
 
     <nav class="sidebar-nav">
@@ -1901,7 +1906,6 @@ function initIaGradient() {
 /* ─── Sidebar toggle ───────────────────────────────────── */
 function toggleSidebar() {
   document.querySelector('.app').classList.toggle('sidebar-collapsed');
-  document.getElementById('hamburgerBtn').classList.toggle('is-open');
 }
 
 /* ─── Boot ─────────────────────────────────────────────── */
