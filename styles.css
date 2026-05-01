@@ -491,8 +491,8 @@ tbody tr:hover td { background: var(--color-surface); }
 .settings-add-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 13px; font-weight: 500; color: var(--color-text); cursor: pointer; transition: background 150ms, border-color 150ms; font-family: var(--font-body); }
 
 /* ── IA de Propostas ─────────────────────────────────────── */
-#sec-ia-propostas { margin: -32px; }
-.ia-page { display: flex; flex-direction: column; height: calc(100vh - var(--topbar-height)); min-height: 0; }
+#sec-ia-propostas { margin: -32px; position: relative; background: linear-gradient(40deg, rgb(5,24,24), rgb(12,50,48)); }
+.ia-page { display: flex; flex-direction: column; height: calc(100vh - var(--topbar-height)); min-height: 0; position: relative; z-index: 1; }
 .ia-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 32px 24px 0; min-height: 0; }
 .ia-welcome { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 560px; width: 100%; padding: 40px 0 32px; margin: auto; }
 .ia-welcome-icon { width: 56px; height: 56px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-primary); margin-bottom: 20px; }
@@ -574,3 +574,87 @@ tbody tr:hover td { background: var(--color-surface); }
 .app.sidebar-collapsed .sidebar  { transform: translateX(calc(-1 * var(--sidebar-width))); }
 .app.sidebar-collapsed .topbar   { left: 0; }
 .app.sidebar-collapsed .main     { margin-left: 0; }
+
+/* ── IA Gradient Background ─────────────────────────────── */
+.ia-gradient-bg {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden; pointer-events: none;
+}
+.ia-goo-wrap {
+  width: 100%; height: 100%;
+  filter: url(#iaGoo) blur(40px);
+}
+.ia-blob {
+  position: absolute;
+  width: 80%; height: 80%;
+  top: calc(50% - 40%); left: calc(50% - 40%);
+  mix-blend-mode: hard-light;
+}
+.ia-blob-1 {
+  background: radial-gradient(circle at center, rgba(25,90,88,1) 0, rgba(25,90,88,1) 50%) no-repeat;
+  transform-origin: center center;
+  animation: iaMoveVertical 30s ease infinite;
+}
+.ia-blob-2 {
+  background: radial-gradient(circle at center, rgba(74,124,116,0.8) 0, rgba(74,124,116,0) 50%) no-repeat;
+  transform-origin: calc(50% - 400px);
+  animation: iaMoveInCircle 20s reverse infinite;
+}
+.ia-blob-3 {
+  background: radial-gradient(circle at center, rgba(45,106,79,0.8) 0, rgba(45,106,79,0) 50%) no-repeat;
+  transform-origin: calc(50% + 400px);
+  animation: iaMoveInCircle 40s linear infinite;
+}
+.ia-blob-4 {
+  background: radial-gradient(circle at center, rgba(15,61,62,0.8) 0, rgba(15,61,62,0) 50%) no-repeat;
+  transform-origin: calc(50% - 200px);
+  animation: iaMoveHorizontal 40s ease infinite;
+  opacity: 0.7;
+}
+.ia-blob-5 {
+  background: radial-gradient(circle at center, rgba(100,145,138,0.6) 0, rgba(100,145,138,0) 50%) no-repeat;
+  transform-origin: calc(50% - 800px) calc(50% + 800px);
+  animation: iaMoveInCircle 20s ease infinite;
+}
+.ia-blob-pointer {
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at center, rgba(74,124,116,0.8) 0, rgba(74,124,116,0) 50%) no-repeat;
+  mix-blend-mode: hard-light;
+  opacity: 0.7;
+}
+@keyframes iaMoveInCircle {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes iaMoveVertical {
+  0%   { transform: translateY(-50%); }
+  50%  { transform: translateY(50%); }
+  100% { transform: translateY(-50%); }
+}
+@keyframes iaMoveHorizontal {
+  0%   { transform: translateX(-50%) translateY(-10%); }
+  50%  { transform: translateX(50%) translateY(10%); }
+  100% { transform: translateX(-50%) translateY(-10%); }
+}
+
+/* Text overrides for dark gradient background */
+#sec-ia-propostas .ia-welcome-title { color: rgba(250,250,247,0.92); }
+#sec-ia-propostas .ia-welcome-desc  { color: rgba(250,250,247,0.52); }
+#sec-ia-propostas .ia-welcome-icon  {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+  color: rgba(250,250,247,0.72);
+}
+#sec-ia-propostas .ia-chip {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.13);
+  color: rgba(250,250,247,0.78);
+}
+#sec-ia-propostas .ia-chip:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.24);
+  color: rgba(250,250,247,1);
+}

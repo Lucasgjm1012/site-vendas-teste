@@ -11,6 +11,17 @@
 
 <div class="app">
 
+  <!-- SVG filter for IA gradient blobs -->
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="iaGoo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo"/>
+        <feBlend in="SourceGraphic" in2="goo"/>
+      </filter>
+    </defs>
+  </svg>
+
   <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <div class="sidebar-logo" onclick="navTo('dashboard')" style="cursor:pointer;">
@@ -350,6 +361,16 @@
 
       <!-- ════════════ SECTION: IA DE CRIAÇÃO DE PROPOSTAS ════════════ -->
       <section id="sec-ia-propostas" class="section">
+        <div class="ia-gradient-bg" aria-hidden="true">
+          <div class="ia-goo-wrap">
+            <div class="ia-blob ia-blob-1"></div>
+            <div class="ia-blob ia-blob-2"></div>
+            <div class="ia-blob ia-blob-3"></div>
+            <div class="ia-blob ia-blob-4"></div>
+            <div class="ia-blob ia-blob-5"></div>
+            <div class="ia-blob-pointer" id="iaBlobPointer"></div>
+          </div>
+        </div>
         <div class="ia-page">
 
           <div class="ia-messages" id="iaMessages">
@@ -1849,6 +1870,26 @@ function pbHandleSubmit(e) {
   }, 1800);
 }
 
+/* ─── IA gradient mouse tracking ──────────────────────── */
+function initIaGradient() {
+  const section = document.getElementById('sec-ia-propostas');
+  const pointer = document.getElementById('iaBlobPointer');
+  if (!section || !pointer) return;
+  let curX = 0, curY = 0, tgX = 0, tgY = 0;
+  function tick() {
+    curX += (tgX - curX) / 20;
+    curY += (tgY - curY) / 20;
+    pointer.style.transform = `translate(${Math.round(curX)}px,${Math.round(curY)}px)`;
+    requestAnimationFrame(tick);
+  }
+  section.addEventListener('mousemove', function(e) {
+    const r = section.getBoundingClientRect();
+    tgX = e.clientX - r.left;
+    tgY = e.clientY - r.top;
+  });
+  requestAnimationFrame(tick);
+}
+
 /* ─── Sidebar toggle ───────────────────────────────────── */
 function toggleSidebar() {
   document.querySelector('.app').classList.toggle('sidebar-collapsed');
@@ -1860,6 +1901,7 @@ renderDashboard();
 renderRevenueChart();
 renderKanban(proposals);
 pbInit();
+initIaGradient();
 </script>
 </body>
 </html>
