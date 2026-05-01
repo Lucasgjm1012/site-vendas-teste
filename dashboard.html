@@ -69,6 +69,9 @@
 
   <!-- ── Topbar ── -->
   <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" title="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <div class="topbar-breadcrumb">
       <span>Lume</span>
       <span class="crumb-sep">
@@ -1844,6 +1847,12 @@ function pbHandleSubmit(e) {
     loadMsg.innerHTML = `<p>Entendido! Estou gerando a proposta para <strong>"${preview}"</strong>. Em breve você terá um rascunho completo com apresentação, escopo, cronograma e valores.</p>`;
     msgs.scrollTop = msgs.scrollHeight;
   }, 1800);
+}
+
+/* ─── Sidebar toggle ───────────────────────────────────── */
+function toggleSidebar() {
+  document.querySelector('.app').classList.toggle('sidebar-collapsed');
+  document.getElementById('hamburgerBtn').classList.toggle('is-open');
 }
 
 /* ─── Boot ─────────────────────────────────────────────── */
