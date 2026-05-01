@@ -268,41 +268,49 @@
 
       <!-- ════════════ SECTION: CALENDÁRIO ════════════ -->
       <section id="sec-calendario" class="section">
+        <div class="cal-page">
 
-        <div class="cal-section-header">
-          <h2 style="font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--color-text);">Calendário de prazos</h2>
-        </div>
-
-        <div class="calendar-card">
-          <div class="calendar-nav">
-            <button class="btn-icon" onclick="calNav(-1)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <span class="cal-month" id="calMonthLabel"></span>
-            <button class="btn-icon" onclick="calNav(1)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="calGoToday()" style="margin-left:12px;font-size:12px;padding:4px 10px;">Hoje</button>
+          <div class="cal-section-header">
+            <h2 style="font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--color-text);">Calendário de prazos</h2>
           </div>
-          <div class="cal-grid" id="calGrid"></div>
-        </div>
 
-        <!-- Bottom row: prazos + legenda — full width -->
-        <div class="cal-bottom-row">
-          <div class="cal-upcoming">
-            <p class="cal-upcoming-title">Prazos próximos</p>
-            <div id="upcomingList"></div>
+          <div class="calendar-card">
+            <div class="calendar-nav">
+              <div class="cal-nav-left">
+                <button class="btn-icon" onclick="calNav(-1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="cal-nav-center">
+                <span class="cal-month" id="calMonthLabel"></span>
+              </div>
+              <div class="cal-nav-right">
+                <button class="btn-icon" onclick="calNav(1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="calGoToday()" style="font-size:12px;padding:4px 10px;">Hoje</button>
+              </div>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
           </div>
-          <div class="cal-legend">
-            <p class="cal-legend-title">Legenda</p>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-neutral-status);"></div>A Redigir</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Design</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-accent);"></div>Com Design</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Validação</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-success);"></div>Validada</div>
-          </div>
-        </div>
 
+          <!-- Bottom row: prazos + legenda — full width -->
+          <div class="cal-bottom-row">
+            <div class="cal-upcoming">
+              <p class="cal-upcoming-title">Prazos próximos</p>
+              <div id="upcomingList"></div>
+            </div>
+            <div class="cal-legend">
+              <p class="cal-legend-title">Legenda</p>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-neutral-status);"></div>A Redigir</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Design</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-accent);"></div>Com Design</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-warning);"></div>Aguarda Validação</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--color-success);"></div>Validada</div>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       <!-- ════════════ SECTION: ORÇAMENTOS ════════════ -->
