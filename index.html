@@ -84,8 +84,28 @@
 </div>
 
 <script>
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const btn = this.querySelector('button[type="submit"]');
+
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      alert('Erro ao entrar: ' + error.message);
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      return;
+    }
+
     window.location.href = 'dashboard.html';
   });
 

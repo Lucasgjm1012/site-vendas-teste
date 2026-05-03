@@ -57,9 +57,47 @@
 </div>
 
 <script>
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    window.location.href = 'dashboard.html';
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const password2 = document.getElementById('password2').value;
+    const btn = this.querySelector('button[type="submit"]');
+
+    if (password !== password2) {
+      alert('As senhas não coincidem.');
+      return;
+    }
+
+    if (password.length < 8) {
+      alert('A senha deve ter no mínimo 8 caracteres.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Criando conta...';
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: name
+        }
+      }
+    });
+
+    if (error) {
+      alert('Erro ao criar conta: ' + error.message);
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+      return;
+    }
+
+    alert('Conta criada com sucesso! Verifique seu e-mail para confirmar.');
+    window.location.href = 'index.html';
   });
 </script>
 
